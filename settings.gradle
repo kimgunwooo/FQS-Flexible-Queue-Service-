@@ -9,3 +9,5 @@ include 'service:gateway'
 include 'service:auth'
 include 'service:user'
 include 'service:queue'
+
+include 'common:domain'
