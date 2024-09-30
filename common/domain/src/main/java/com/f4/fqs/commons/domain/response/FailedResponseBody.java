@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @JsonTypeName("false")
 public final class FailedResponseBody extends ResponseBody<Void> {
 
-  private String msg;
+    private String msg;
 
-  public FailedResponseBody(String code, String msg) {
-    this.setCode(code);
-    this.msg = msg;
-  }
+    public FailedResponseBody(String code, String msg) {
+        this.setCode(code);
+        this.msg = msg;
+    }
 }
