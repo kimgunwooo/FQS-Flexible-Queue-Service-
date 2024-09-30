@@ -5,3 +5,4 @@ plugins {
 rootProject.name = 'fqs'
 
 include 'service:eureka'
+include 'service:auth'
