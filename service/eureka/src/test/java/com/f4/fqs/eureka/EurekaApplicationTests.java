@@ -1,10 +1,10 @@
-package com.f4.fqs;
+package com.f4.fqs.eureka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FqsApplicationTests {
+class EurekaApplicationTests {
 
 	@Test
 	void contextLoads() {
