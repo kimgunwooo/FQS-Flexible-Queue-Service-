@@ -6,6 +6,7 @@ import com.f4.fqs.user.model.User;
 import com.f4.fqs.user.dto.SignInRequestDto;
 import com.f4.fqs.user.dto.SignupResponseDto;
 import com.f4.fqs.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,13 @@ public class UserController {
     private final AuthServiceClient authServiceClient;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody @Valid SignInRequestDto requestDto){
+    public ResponseEntity<?> signup(@RequestBody @Valid SignInRequestDto requestDto, HttpServletResponse response){
         User user = userService.signup(requestDto);
 
         String jwt = authServiceClient.createAccessToken(user.getEmail());
 
-        return ResponseEntity.ok(new SignupResponseDto(user, jwt));
+        response.addHeader("Authorization", "Bearer " + jwt);
+
+        return ResponseEntity.ok(SignupResponseDto.toResponse(user));
     }
 }
