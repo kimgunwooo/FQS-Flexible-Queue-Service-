@@ -1,5 +1,6 @@
 package com.f4.fqs.user.service;
 
+import com.f4.fqs.user.dto.LogInRequestDto;
 import com.f4.fqs.user.model.User;
 import com.f4.fqs.user.dto.SignUpRequestDto;
 import com.f4.fqs.user.repository.UserRepository;
@@ -28,7 +29,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User login(SignUpRequestDto requestDto) {
+    public User login(LogInRequestDto requestDto) {
 
         User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("등록된 이메일이 아닙니다."));
