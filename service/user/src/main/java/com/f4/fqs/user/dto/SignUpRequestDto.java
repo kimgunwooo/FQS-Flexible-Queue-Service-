@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SignInRequestDto {
+public class SignUpRequestDto {
 
     @NotBlank(message = "이메일을 입력하지 않았습니다.")
     @Email(message = "이메일 형식이 아닙니다.")
