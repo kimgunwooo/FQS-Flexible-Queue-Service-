@@ -1,6 +1,7 @@
 package com.f4.fqs.user.service;
 
 import com.f4.fqs.user.dto.LogInRequestDto;
+import com.f4.fqs.user.dto.UserDto;
 import com.f4.fqs.user.model.User;
 import com.f4.fqs.user.dto.SignUpRequestDto;
 import com.f4.fqs.user.repository.UserRepository;
@@ -17,7 +18,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
-    public User signup(SignUpRequestDto requestDto) {
+    public UserDto signup(SignUpRequestDto requestDto) {
 
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
@@ -26,10 +27,13 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
         User user = new User(requestDto.getEmail(), encodedPassword, requestDto.getRole());
-        return userRepository.save(user);
+
+        userRepository.save(user);
+
+        return UserDto.toResponse(user);
     }
 
-    public User login(LogInRequestDto requestDto) {
+    public UserDto login(LogInRequestDto requestDto) {
 
         User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("등록된 이메일이 아닙니다."));
@@ -38,6 +42,6 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
 
-        return user;
+        return UserDto.toResponse(user);
     }
 }

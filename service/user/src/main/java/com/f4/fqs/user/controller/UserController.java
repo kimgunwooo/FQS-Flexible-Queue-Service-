@@ -1,17 +1,11 @@
 package com.f4.fqs.user.controller;
 
 
-import com.f4.fqs.user.client.AuthServiceClient;
 import com.f4.fqs.user.dto.LogInRequestDto;
-import com.f4.fqs.user.dto.LogInResponseDto;
-import com.f4.fqs.user.model.User;
+import com.f4.fqs.user.dto.UserDto;
 import com.f4.fqs.user.dto.SignUpRequestDto;
-import com.f4.fqs.user.dto.SignUpResponseDto;
 import com.f4.fqs.user.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,23 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-    private final AuthServiceClient authServiceClient;
+
 
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponseDto> signup(@RequestBody @Valid SignUpRequestDto requestDto){
-        User user = userService.signup(requestDto);
+    public ResponseEntity<UserDto> signup(@RequestBody SignUpRequestDto requestDto){
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(SignUpResponseDto.toResponse(user));
+        UserDto userDto = userService.signup(requestDto);
+
+    return ResponseEntity.ok().body(userDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LogInResponseDto> login(@RequestBody @Valid LogInRequestDto requestDto, HttpServletResponse response){
-        User user = userService.login(requestDto);
+    public ResponseEntity<UserDto> login(@RequestBody LogInRequestDto requestDto){
 
-        String jwt = authServiceClient.createAccessToken(user.getEmail());
+        UserDto userDto = userService.login(requestDto);
 
-        response.addHeader("Authorization", "Bearer " + jwt);
-
-        return ResponseEntity.status(HttpStatus.OK).body(LogInResponseDto.toResponse(user));
+        return ResponseEntity.ok().body(userDto);
     }
 }
