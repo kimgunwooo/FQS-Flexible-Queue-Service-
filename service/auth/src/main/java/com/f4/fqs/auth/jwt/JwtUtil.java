@@ -1,9 +1,12 @@
 package com.f4.fqs.auth.jwt;
 
+import static javax.crypto.Cipher.SECRET_KEY;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,4 +37,15 @@ public class JwtUtil {
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
+
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+//    public boolean validateToken(String token) {
+//    }
 }
