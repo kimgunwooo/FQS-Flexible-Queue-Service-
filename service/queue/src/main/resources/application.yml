@@ -4,6 +4,20 @@ server:
 spring:
   application:
     name: queue-service
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/queue
+    username: root
+    password: password
+    pool.enabled: true
+    pool.initial-size: 10
+    pool.max-size: 50
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    open-in-view: false
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -23,3 +37,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+
+logging:
+  level:
+    org.springframework.r2dbc.core: debug
