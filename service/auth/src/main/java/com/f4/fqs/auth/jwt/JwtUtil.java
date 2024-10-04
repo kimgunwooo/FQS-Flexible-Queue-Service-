@@ -1,17 +1,16 @@
-package com.f4.fqs.auth;
+package com.f4.fqs.auth.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
 import java.util.Date;
+import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Service
-public class AuthService {
+@Component
+public class JwtUtil {
 
     @Value("${spring.application.name}")
     private String issuer;
@@ -21,7 +20,7 @@ public class AuthService {
 
     private final SecretKey secretKey;
 
-    public AuthService(@Value("${service.jwt.secret-key}") String secretKey) {
+    public JwtUtil(@Value("${service.jwt.secret-key}") String secretKey) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
