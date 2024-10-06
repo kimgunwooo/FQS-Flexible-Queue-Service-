@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "user-service", url = "http://localhost:19093")
+@FeignClient(name = "user-service")
 public interface UserServiceClient {
 
     @PostMapping("/user/signup")
