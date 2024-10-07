@@ -11,6 +11,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class UserDto {
 
+    private Long userId;
     private String username;
     private Collection<String> roles;
 
