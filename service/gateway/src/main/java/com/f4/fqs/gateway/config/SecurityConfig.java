@@ -76,11 +76,17 @@ public class SecurityConfig {
                     log.info("Decoded secret key bytes length: {}", bytes.length); // 로그 추가
 
                     Claims claims = Jwts
-                            .parserBuilder()
+                            .parser()
                             .setSigningKey(secretKey)
                             .build()
                             .parseClaimsJws(token)
                             .getBody();
+
+//                    Claims claims = Jwts
+//                            .parser()
+//                            .verifyWith(secretKey)
+//                            .parseClaimsJws(token)
+//                            .getBody();
 
                     log.info("Claims: {}", claims); // 로그 추가
 
