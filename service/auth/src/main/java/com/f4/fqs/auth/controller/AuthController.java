@@ -1,5 +1,6 @@
 package com.f4.fqs.auth.controller;
 
+import com.f4.fqs.auth.dto.LogInIAMRequestDto;
 import com.f4.fqs.auth.dto.LogInRequestDto;
 import com.f4.fqs.auth.dto.SignUpRequestDto;
 import com.f4.fqs.auth.dto.UserDto;
@@ -39,8 +40,28 @@ public class AuthController {
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LogInRequestDto requestDto, HttpServletResponse response, BindingResult bindingResult){
+    @PostMapping("/login/root")
+    public ResponseEntity<?> loginRoot(@RequestBody @Valid LogInRequestDto requestDto, HttpServletResponse response, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()){
+            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            FailedResponseBody failedResponseBody = new FailedResponseBody("400", errorMessage);
+            return ResponseEntity.badRequest().body(failedResponseBody);
+        }
+
+        UserDto userDto = authService.login(requestDto);
+
+        String jwt = authService.createAccessToken(requestDto.getEmail());
+
+        response.addHeader("Authorization", "Bearer " + jwt);
+
+        SuccessResponseBody<UserDto> responseBody = new SuccessResponseBody<>(userDto);
+
+        return ResponseEntity.ok().body(responseBody);
+    }
+
+    @PostMapping("/login/iam")
+    public ResponseEntity<?> loginIam(@RequestBody @Valid LogInIAMRequestDto requestDto, HttpServletResponse response, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
