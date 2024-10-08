@@ -37,7 +37,7 @@ class QueueRepositoryTest {
     void testSaveQueue() {
         // Given
         String secretKey = generateRandomString(16);
-        Queue queue = Queue.from(testRequest, secretKey);
+        Queue queue = Queue.from(testRequest, secretKey, 1L, 1L);
 
         // When
         Mono<Queue> savedQueueMono = queueRepository.save(queue);
