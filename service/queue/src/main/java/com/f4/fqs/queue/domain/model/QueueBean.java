@@ -13,7 +13,7 @@ public class QueueBean {
     @Id
     private Long id;
 
-    private String beanName;
+    private String name;
 
     private boolean messageOrderGuaranteed;
 
@@ -26,8 +26,8 @@ public class QueueBean {
     private LocalDateTime updatedAt;
 
     @Builder(access = AccessLevel.PROTECTED)
-    public QueueBean(String beanName, boolean messageOrderGuaranteed, boolean messageDuplicationAllowed) {
-        this.beanName = beanName;
+    public QueueBean(String name, boolean messageOrderGuaranteed, boolean messageDuplicationAllowed) {
+        this.name = name;
         this.messageOrderGuaranteed = messageOrderGuaranteed;
         this.messageDuplicationAllowed = messageDuplicationAllowed;
     }

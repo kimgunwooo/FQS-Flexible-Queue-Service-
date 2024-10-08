@@ -1,5 +1,5 @@
 -- queue_bean 테이블에 데이터 삽입
-INSERT INTO queue_bean (bean_name, message_order_guaranteed, message_duplication_allowed)
+INSERT INTO queue_bean (name, message_order_guaranteed, message_duplication_allowed)
 VALUES ('BeanA', TRUE, TRUE),
        ('BeanB', FALSE, TRUE),
        ('BeanC', TRUE, FALSE);

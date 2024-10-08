@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS queue_bean;
 CREATE TABLE queue_bean
 (
     id                          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    bean_name                   VARCHAR(16) NOT NULL,
+    name                   VARCHAR(16) NOT NULL,
     message_order_guaranteed    BOOLEAN     NOT NULL,
     message_duplication_allowed BOOLEAN     NOT NULL,
     created_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
