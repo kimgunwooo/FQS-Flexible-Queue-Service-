@@ -19,6 +19,9 @@ public enum QueueErrorCode implements ErrorCode {
 
     // QueuePackage
     QUEUE_PACKAGE_NOT_FOUND(404, "QUEUE_PACKAGE_001", "존재하지 않는 대기열 패키지 입니다."),
+
+    // QueueBean
+    QUEUE_BEAN_NOT_FOUND(404, "QUEUE_BEAN_001", "존재하지 않는 대기열 Bean 입니다."),
     ;
 
     private final int status;
