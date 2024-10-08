@@ -23,11 +23,12 @@ public class QueueController {
 
     private final QueueService queueService;
 
-
+    @AuthorizationRequired({"ROLE_ROOT"}) // TODO. ROOT 권한의 이름으로 대체
     @PostMapping
     public Mono<ResponseEntity<ResponseBody<CreateQueueResponse>>> createQueue(
             @RequestBody @Valid CreateQueueRequest request,
-            @RequestHeader("X-User-Id") Long userId) {
+            @RequestHeader("X-User-Id") Long userId,
+            ServerWebExchange exchange) {
         return queueService.createQueue(request, userId).map(response -> ResponseEntity.ok(createSuccessResponse(response)));
     }
 
