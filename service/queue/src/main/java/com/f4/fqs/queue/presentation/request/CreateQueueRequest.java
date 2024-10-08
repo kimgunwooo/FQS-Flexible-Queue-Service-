@@ -11,6 +11,7 @@ public record CreateQueueRequest(
         @NotNull int maxMessageSize,
         @NotNull int expirationTime,
         @NotNull boolean messageOrderGuaranteed,
-        @NotNull boolean messageDuplicationAllowed
+        @NotNull boolean messageDuplicationAllowed,
+        @NotNull Long queuePackageId
 ) {
 }

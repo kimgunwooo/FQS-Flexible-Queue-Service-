@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: queue-service
+
   r2dbc:
     url: r2dbc:mysql://localhost:3306/queue
     username: root
@@ -11,6 +12,11 @@ spring:
     pool.enabled: true
     pool.initial-size: 10
     pool.max-size: 50
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   sql:
     init:

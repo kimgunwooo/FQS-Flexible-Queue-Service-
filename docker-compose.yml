@@ -19,6 +19,14 @@ services:
       MYSQL_CHARSET: utf8mb4
       MYSQL_ROOT_PASSWORD: password
       MYSQL_COLLATION: utf8mb4_unicode_ci
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     # platform: linux/amd64
