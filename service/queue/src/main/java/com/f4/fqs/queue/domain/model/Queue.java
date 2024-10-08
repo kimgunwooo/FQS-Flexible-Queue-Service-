@@ -19,6 +19,10 @@ public class Queue {
     @Id
     private Long Id;
 
+    private Long userId;
+
+    private Long queuePackageId;
+
     private String name;
 
     // TODO. 아래 3개 필드의 단위를 어떻게 가져갈지?
@@ -41,7 +45,7 @@ public class Queue {
     private LocalDateTime updatedAt;
 
     @Builder(access = AccessLevel.PROTECTED)
-    public Queue(int expirationTime, int maxMessageSize, boolean messageDuplicationAllowed, boolean messageOrderGuaranteed, int messageRetentionPeriod, String name, String secretKey) {
+    public Queue(int expirationTime, int maxMessageSize, boolean messageDuplicationAllowed, boolean messageOrderGuaranteed, int messageRetentionPeriod, String name, String secretKey, Long userId, Long queuePackageId) {
         this.expirationTime = expirationTime;
         this.maxMessageSize = maxMessageSize;
         this.messageDuplicationAllowed = messageDuplicationAllowed;
@@ -49,9 +53,11 @@ public class Queue {
         this.messageRetentionPeriod = messageRetentionPeriod;
         this.name = name;
         this.secretKey = secretKey;
+        this.userId = userId;
+        this.queuePackageId = queuePackageId;
     }
 
-    public static Queue from(CreateQueueRequest request, String secretKey) {
+    public static Queue from(CreateQueueRequest request, String secretKey, Long userId, Long queuePackageId) {
         return Queue.builder()
                 .expirationTime(request.expirationTime())
                 .maxMessageSize(request.maxMessageSize())
@@ -60,6 +66,8 @@ public class Queue {
                 .messageRetentionPeriod(request.messageRetentionPeriod())
                 .name(request.name())
                 .secretKey(secretKey)
+                .userId(userId)
+                .queuePackageId(queuePackageId)
                 .build();
     }
 }
