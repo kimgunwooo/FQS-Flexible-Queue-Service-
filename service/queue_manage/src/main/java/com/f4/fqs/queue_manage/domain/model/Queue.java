@@ -7,16 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "queues")
-@SQLDelete(sql = "UPDATE queues SET deleted_at = NOW() where id=?")
-@SQLRestriction(value = "deleted_at is NULL")
 public class Queue extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,17 +35,22 @@ public class Queue extends BaseEntity{
     private int maxMessageSize;
 
     @Column(nullable = false)
-    private int expirationTime;
+    private LocalDateTime expirationTime;
 
+    @Column(nullable = false)
     private boolean messageOrderGuaranteed;
 
+    @Column(nullable = false)
     private boolean messageDuplicationAllowed;
 
     @Column(nullable = false, unique = true)
     private String secretKey;
 
+    @Column(nullable = false)
+    private Boolean isActive;
+
     @Builder(access = AccessLevel.PROTECTED)
-    public Queue(int expirationTime, int maxMessageSize, boolean messageDuplicationAllowed, boolean messageOrderGuaranteed, int messageRetentionPeriod, String name, String secretKey, Long userId) {
+    public Queue(LocalDateTime expirationTime, int maxMessageSize, boolean messageDuplicationAllowed, boolean messageOrderGuaranteed, int messageRetentionPeriod, String name, String secretKey, Long userId) {
         this.expirationTime = expirationTime;
         this.maxMessageSize = maxMessageSize;
         this.messageDuplicationAllowed = messageDuplicationAllowed;
@@ -56,6 +59,7 @@ public class Queue extends BaseEntity{
         this.name = name;
         this.secretKey = secretKey;
         this.userId = userId;
+        this.isActive = true;
     }
 
     public static Queue from(CreateQueueRequest request, String secretKey, Long userId) {
@@ -69,5 +73,14 @@ public class Queue extends BaseEntity{
                 .secretKey(secretKey)
                 .userId(userId)
                 .build();
+    }
+
+    public void updateExpirationTime(LocalDateTime localDateTime) {
+        this.expirationTime = localDateTime;
+    }
+
+    public void closeQueue(boolean isActive, LocalDateTime now) {
+        this.isActive = isActive;
+        this.expirationTime = now;
     }
 }
