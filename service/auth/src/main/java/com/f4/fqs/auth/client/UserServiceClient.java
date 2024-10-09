@@ -1,9 +1,11 @@
 package com.f4.fqs.auth.client;
 
-import com.f4.fqs.auth.dto.LogInIAMRequestDto;
-import com.f4.fqs.auth.dto.LogInRequestDto;
-import com.f4.fqs.auth.dto.SignUpRequestDto;
-import com.f4.fqs.auth.dto.UserDto;
+import com.f4.fqs.auth.dto.IAM.IAMUserDto;
+import com.f4.fqs.auth.dto.IAM.LogInIAMRequestDto;
+import com.f4.fqs.auth.dto.ROOT.LogInRequestDto;
+import com.f4.fqs.auth.dto.ROOT.SignUpRequestDto;
+import com.f4.fqs.auth.dto.ROOT.RootUserDto;
+import com.f4.fqs.auth.dto.IAM.CreateAccountRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserServiceClient {
 
     @PostMapping("/user/signup")
-    ResponseEntity<UserDto> signup(@RequestBody SignUpRequestDto requestDto);
+    ResponseEntity<RootUserDto> signup(@RequestBody SignUpRequestDto requestDto);
 
     @PostMapping("/user/login/root")
-    ResponseEntity<UserDto> login(@RequestBody LogInRequestDto requestDto);
+    ResponseEntity<RootUserDto> login(@RequestBody LogInRequestDto requestDto);
 
     @PostMapping("/user/login/iam")
-    ResponseEntity<UserDto> login(@RequestBody LogInIAMRequestDto requestDto);
+    ResponseEntity<IAMUserDto> login(@RequestBody LogInIAMRequestDto requestDto);
+
+    @PostMapping("/user/createIAM")
+    ResponseEntity<IAMUserDto> creatIAMAccount(@RequestBody CreateAccountRequest request);
 
 }
