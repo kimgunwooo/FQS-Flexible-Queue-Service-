@@ -31,6 +31,13 @@ public class GlobalExceptionHandler {
                 .body(new FailedResponseBody(QueueErrorCode.INVALID_INPUT_VALUE.getCode(), errorMessage));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class) // IllegalArgumentException
+    public ResponseEntity<ResponseBody<Void>> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error("IllegalArgumentException : {}", e.getMessage());
+        return ResponseEntity.badRequest()
+                .body(new FailedResponseBody(QueueErrorCode.INVALID_INPUT_VALUE.getCode(), e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseBody<Void>> handleException(Exception e) {
         log.error("Exception : {}", e.getMessage());
