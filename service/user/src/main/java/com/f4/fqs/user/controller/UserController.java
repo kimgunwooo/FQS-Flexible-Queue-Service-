@@ -1,16 +1,15 @@
 package com.f4.fqs.user.controller;
 
 
-import com.f4.fqs.user.dto.LogInIAMRequestDto;
-import com.f4.fqs.user.dto.LogInRequestDto;
-import com.f4.fqs.user.dto.UserDto;
-import com.f4.fqs.user.dto.SignUpRequestDto;
-import com.f4.fqs.user.dto.createAccountRequest;
+import com.f4.fqs.user.dto.IAM.IAMUserDto;
+import com.f4.fqs.user.dto.IAM.LogInIAMRequestDto;
+import com.f4.fqs.user.dto.ROOT.LogInRequestDto;
+import com.f4.fqs.user.dto.ROOT.RootUserDto;
+import com.f4.fqs.user.dto.ROOT.SignUpRequestDto;
+import com.f4.fqs.user.dto.IAM.CreateAccountRequest;
 import com.f4.fqs.user.service.UserService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,42 +24,44 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> signup(@RequestBody SignUpRequestDto requestDto){
+    public ResponseEntity<RootUserDto> signup(@RequestBody SignUpRequestDto requestDto){
 
-        UserDto userDto = userService.signup(requestDto);
+        RootUserDto rootUserDto = userService.signup(requestDto);
 
-    return ResponseEntity.ok().body(userDto);
+    return ResponseEntity.ok().body(rootUserDto);
     }
 
     @PostMapping("/login/root")
-    public ResponseEntity<UserDto> login(@RequestBody LogInRequestDto requestDto){
+    public ResponseEntity<RootUserDto> login(@RequestBody LogInRequestDto requestDto){
 
-        UserDto userDto = userService.login(requestDto);
+        RootUserDto rootUserDto = userService.login(requestDto);
 
-        return ResponseEntity.ok().body(userDto);
+        return ResponseEntity.ok().body(rootUserDto);
     }
 
     @PostMapping("/login/iam")
-    public ResponseEntity<UserDto> login(@RequestBody LogInIAMRequestDto requestDto){
+    public ResponseEntity<IAMUserDto> login(@RequestBody LogInIAMRequestDto requestDto){
 
-        UserDto userDto = userService.login(requestDto);
+        IAMUserDto iamUserDto = userService.login(requestDto);
 
-        return ResponseEntity.ok().body(userDto);
+        return ResponseEntity.ok().body(iamUserDto);
     }
 
     @PostMapping("/createIAM")
-    public ResponseEntity<?> creatIAMAccount(@RequestBody createAccountRequest request){
+    public ResponseEntity<IAMUserDto> creatIAMAccount(@RequestBody CreateAccountRequest request){
 
-        UserDto userDto = userService.createAccount(request);
+        IAMUserDto userDto = userService.createAccount(request);
 
         return ResponseEntity.ok().body(userDto);
     }
 
-    @GetMapping("My-IAM")
-    public ResponseEntity<?> getIAMAccounts(){
 
-        List<UserDto> userDtoList = userService.getAccounts();
 
-        return ResponseEntity.ok().body(userDtoList);
-    }
+//    @GetMapping("My-IAM")
+//    public ResponseEntity<?> getIAMAccounts(){
+//
+//        List<UserDto> userDtoList = userService.getAccounts();
+//
+//        return ResponseEntity.ok().body(userDtoList);
+//    }
 }
