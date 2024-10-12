@@ -5,7 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +58,36 @@ public class RedisService {
         return redisTemplate.hasKey(key);
     }
 
+    public Boolean lineUp(String userId) {
+
+        Boolean result = redisTemplate.opsForZSet()
+                .add("line", userId, LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        return result;
+    }
+
+    public List<String> consume(int size) {
+
+        List<String> result = Objects.requireNonNull(
+                    redisTemplate.opsForZSet().range("line", 0, size - 1)
+                )
+                .stream()
+                .map(String::valueOf)
+                .toList();
+
+        Long removedCount = redisTemplate.opsForZSet().removeRange("line", 0, 2);
+
+        return result;
+
+    }
+
+    public long getMyRank(String userId) {
+
+        Long rank = Optional.ofNullable(
+                redisTemplate.opsForZSet().rank("line", userId)
+        ).orElseThrow(() -> new RuntimeException("temporary"));
+
+        return rank;
+    }
 
 }
