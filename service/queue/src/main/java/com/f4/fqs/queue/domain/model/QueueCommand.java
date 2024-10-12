@@ -1,4 +1,4 @@
-package com.f4.fqs.queue.domain.model.eventStore;
+package com.f4.fqs.queue.domain.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

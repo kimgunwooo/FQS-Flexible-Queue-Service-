@@ -1,7 +1,7 @@
 package com.f4.fqs.queue.kafka.service.producer;
 
 import com.f4.fqs.commons.domain.util.KafkaUtil;
-import com.f4.fqs.queue.domain.model.eventStore.QueueCommand;
+import com.f4.fqs.queue.domain.model.QueueCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

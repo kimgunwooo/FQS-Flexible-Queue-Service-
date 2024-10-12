@@ -13,14 +13,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-//	implementation 'com.amazonaws:aws-java-sdk-ecs'
-	// https://mvnrepository.com/artifact/software.amazon.awssdk/ecs
-	implementation 'software.amazon.awssdk:ecs:2.28.17'
-	implementation 'software.amazon.awssdk:ecr:2.28.17'
 
-	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-	implementation 'io.asyncer:r2dbc-mysql:1.2.0'
-	implementation 'io.r2dbc:r2dbc-h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 
 	//	kafka
 	implementation 'org.springframework.kafka:spring-kafka'

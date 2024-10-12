@@ -1,4 +1,4 @@
-package com.f4.fqs.queue.domain.model.eventStore;
+package com.f4.fqs.queue.domain.model;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;

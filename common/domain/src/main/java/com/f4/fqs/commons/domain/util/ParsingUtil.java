@@ -1,7 +1,11 @@
 package com.f4.fqs.commons.domain.util;
 
+import com.f4.fqs.commons.domain.exception.BusinessException;
+import com.f4.fqs.commons.domain.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 
 public final class ParsingUtil {
 
@@ -19,4 +23,20 @@ public final class ParsingUtil {
         return objectMapper.convertValue(jsonString, clazz);
     }
 
+    public static <T> T readJsonString(String jsonString, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(jsonString, clazz);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String parseText(String before) {
+        try {
+            return objectMapper.readTree(before).asText();
+        } catch (JsonProcessingException e) {
+            System.out.println("ENTER EXCEPTION :: ");
+            throw new RuntimeException(e);
+        }
+    }
 }
