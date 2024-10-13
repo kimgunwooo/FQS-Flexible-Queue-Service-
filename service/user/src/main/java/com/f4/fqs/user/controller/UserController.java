@@ -8,11 +8,14 @@ import com.f4.fqs.user.dto.ROOT.RootUserDto;
 import com.f4.fqs.user.dto.ROOT.SignUpRequestDto;
 import com.f4.fqs.user.dto.IAM.CreateAccountRequest;
 import com.f4.fqs.user.service.UserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -55,13 +58,11 @@ public class UserController {
         return ResponseEntity.ok().body(userDto);
     }
 
+    @GetMapping("/showMembers")
+    public ResponseEntity<List<IAMUserDto>> getMembers(@RequestParam Long rootId){
 
+        List<IAMUserDto> userDtoList = userService.getAllUsers(rootId);
 
-//    @GetMapping("My-IAM")
-//    public ResponseEntity<?> getIAMAccounts(){
-//
-//        List<UserDto> userDtoList = userService.getAccounts();
-//
-//        return ResponseEntity.ok().body(userDtoList);
-//    }
+        return ResponseEntity.ok().body(userDtoList);
+    }
 }

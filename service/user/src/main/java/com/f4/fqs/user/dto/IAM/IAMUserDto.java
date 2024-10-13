@@ -19,7 +19,7 @@ public class IAMUserDto {
     public static IAMUserDto toResponse(IAMUser iamUser){
         return IAMUserDto.builder()
                 .id(iamUser.getId())
-                .groupId(iamUser.getGroupId())
+                .groupId(iamUser.getRootUser().getId())
                 .email(iamUser.getEmail())
                 .name(iamUser.getName())
                 .groupName(iamUser.getGroupName())

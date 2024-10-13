@@ -13,7 +13,9 @@ import com.f4.fqs.user.dto.ROOT.SignUpRequestDto;
 import com.f4.fqs.user.repository.IAMRepository;
 import com.f4.fqs.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -71,6 +73,7 @@ public class UserService {
     }
 
     //root의 iam 계정 생성
+    @Transactional
     public IAMUserDto createAccount(CreateAccountRequest request) {
 
         if (iamRepository.existsByEmail(request.getEmail())) {
@@ -81,11 +84,13 @@ public class UserService {
 
         String groupName = userRepository.findById(request.getGroupId()).get().getGroupName();
 
+        RootUser rootUser = userRepository.findById(request.getGroupId()).get();
+
         log(groupName);
 
         IAMUser iamUser = IAMUser
                 .builder()
-                .groupId(request.getGroupId())
+                .rootUser(rootUser)
                 .email(request.getEmail())
                 .groupName(groupName)
                 .name(request.getName())
@@ -105,7 +110,12 @@ public class UserService {
         return  RootUserDto.toResponse(dto);
     }
 
-//    public List<UserDto> getAccounts() {
-//
-//    }
+    @Transactional
+    public List<IAMUserDto> getAllUsers(Long groupId) {
+        List<IAMUser> userList = iamRepository.findAllByRootUser_Id(groupId);
+
+        return userList.stream()
+                .map(IAMUserDto::toResponse)
+                .collect(Collectors.toList());
+    }
 }

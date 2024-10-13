@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,8 +25,9 @@ public class IAMUser {
     @Column(name = "id",nullable = false)
     private Long id;
 
-    @Column(name = "group_id")
-    private Long groupId;
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private RootUser rootUser;
 
     @Column(name = "group_name")
     private String groupName;
@@ -42,8 +45,8 @@ public class IAMUser {
     private String role = "IAM";
 
     @Builder
-    public IAMUser(Long groupId, String email, String password, String role, String name, String groupName) {
-        this.groupId = groupId;
+    public IAMUser(RootUser rootUser, String email, String password, String role, String name, String groupName) {
+        this.rootUser = rootUser;
         this.email = email;
         this.name = name;
         this.groupName = groupName;

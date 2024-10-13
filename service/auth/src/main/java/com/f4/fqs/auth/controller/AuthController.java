@@ -14,15 +14,18 @@ import com.f4.fqs.commons.domain.response.FailedResponseBody;
 import com.f4.fqs.commons.domain.response.SuccessResponseBody;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -103,4 +106,16 @@ public class AuthController {
 
         return ResponseEntity.ok().body(userDto);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/showMembers")
+    public ResponseEntity<List<IAMUserDto>> getMembers(@AuthenticationPrincipal JwtAuthentication jwtAuthentication){
+
+        Long rootId = jwtAuthentication.getUserId();
+
+        List<IAMUserDto> userDtoList = authService.getAllUsers(rootId);
+
+        return ResponseEntity.ok().body(userDtoList);
+    }
+
 }
