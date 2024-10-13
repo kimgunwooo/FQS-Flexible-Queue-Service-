@@ -1,6 +1,5 @@
 package com.f4.fqs.auth.service;
 
-import com.f4.fqs.auth.UserRoleEnum;
 import com.f4.fqs.auth.client.UserServiceClient;
 import com.f4.fqs.auth.dto.IAM.IAMUserDto;
 import com.f4.fqs.auth.dto.IAM.LogInIAMRequestDto;
@@ -11,7 +10,6 @@ import com.f4.fqs.auth.dto.IAM.CreateAccountRequest;
 import com.f4.fqs.auth.jwt.JwtUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

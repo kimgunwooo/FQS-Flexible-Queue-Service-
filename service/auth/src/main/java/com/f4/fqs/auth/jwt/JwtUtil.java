@@ -1,6 +1,5 @@
 package com.f4.fqs.auth.jwt;
 
-import com.f4.fqs.auth.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

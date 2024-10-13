@@ -35,16 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequestDto requestDto, BindingResult bindingResult){
-
-        if(bindingResult.hasErrors()){
-            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
-            FailedResponseBody failedResponseBody = new FailedResponseBody("400", errorMessage);
-            return ResponseEntity.badRequest().body(failedResponseBody);
-        }
 
         RootUserDto rootUserDto = authService.signup(requestDto);
 
@@ -55,12 +48,6 @@ public class AuthController {
 
     @PostMapping("/login/root")
     public ResponseEntity<?> loginRoot(@RequestBody @Valid LogInRequestDto requestDto, HttpServletResponse response, BindingResult bindingResult){
-
-        if(bindingResult.hasErrors()){
-            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
-            FailedResponseBody failedResponseBody = new FailedResponseBody("400", errorMessage);
-            return ResponseEntity.badRequest().body(failedResponseBody);
-        }
 
         RootUserDto rootUserDto = authService.login(requestDto);
 
@@ -75,12 +62,6 @@ public class AuthController {
 
     @PostMapping("/login/iam")
     public ResponseEntity<?> loginIam(@RequestBody @Valid LogInIAMRequestDto requestDto, HttpServletResponse response, BindingResult bindingResult){
-
-        if(bindingResult.hasErrors()){
-            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
-            FailedResponseBody failedResponseBody = new FailedResponseBody("400", errorMessage);
-            return ResponseEntity.badRequest().body(failedResponseBody);
-        }
 
         IAMUserDto iamUserDto = authService.login(requestDto);
 
