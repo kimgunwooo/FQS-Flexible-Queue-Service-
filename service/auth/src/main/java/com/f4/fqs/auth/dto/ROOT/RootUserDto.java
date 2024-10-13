@@ -1,5 +1,6 @@
 package com.f4.fqs.auth.dto.ROOT;
 
+import com.f4.fqs.auth.UserRoleEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,5 @@ public class RootUserDto {
     private String groupLeaderName;
     private Long id;
     private String email;
-    private String password;
     private String role;
 }

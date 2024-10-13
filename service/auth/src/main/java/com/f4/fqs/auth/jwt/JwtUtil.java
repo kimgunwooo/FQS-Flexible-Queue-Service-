@@ -31,7 +31,7 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
-    public String createAccessToken(Long id, String email, UserRoleEnum role) {
+    public String createAccessToken(Long id, String email, String role) {
         return BEARER_PREFIX +
                 Jwts.builder()
                         .claim("id", id)

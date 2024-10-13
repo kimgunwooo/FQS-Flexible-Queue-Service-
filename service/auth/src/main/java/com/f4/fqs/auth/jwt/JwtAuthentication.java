@@ -21,7 +21,7 @@ public class JwtAuthentication implements Authentication {
         this.userId = userId;
         this.email = email;
         this.role = role;
-        this.authenticated = true;
+        this.authenticated = false;
     }
 
     @Override

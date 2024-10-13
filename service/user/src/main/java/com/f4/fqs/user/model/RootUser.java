@@ -42,7 +42,7 @@ public class RootUser {
     private String password;
 
     @Column(name = "role")
-    private String role = "ROOT";
+    private UserRoleEnum role;
 
     @OneToMany(mappedBy = "rootUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<IAMUser> iamUsers = new ArrayList<>();
@@ -52,6 +52,6 @@ public class RootUser {
         this.groupLeaderName = requestDto.getGroupLeaderName();
         this.email = requestDto.getEmail();
         this.password = encodedPassword;
-        this.role = requestDto.getRole();
+        this.role = UserRoleEnum.ROOT;
     }
 }

@@ -23,7 +23,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final UserServiceClient userServiceClient;
 
-    public String createAccessToken(Long id, String email, UserRoleEnum role) {
+    public String createAccessToken(Long id, String email, String role) {
         return jwtUtil.createAccessToken(id, email, role);
     }
 

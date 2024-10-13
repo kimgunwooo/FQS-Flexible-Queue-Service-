@@ -64,7 +64,7 @@ public class AuthController {
 
         RootUserDto rootUserDto = authService.login(requestDto);
 
-        String jwt = authService.createAccessToken(rootUserDto.getId(), requestDto.getEmail(), UserRoleEnum.ROOT);
+        String jwt = authService.createAccessToken(rootUserDto.getId(), requestDto.getEmail(), UserRoleEnum.ROOT.getAuthority());
 
         response.addHeader("Authorization", jwt);
 
@@ -84,7 +84,7 @@ public class AuthController {
 
         IAMUserDto iamUserDto = authService.login(requestDto);
 
-        String jwt = authService.createAccessToken(iamUserDto.getId(), requestDto.getEmail(), UserRoleEnum.IAM);
+        String jwt = authService.createAccessToken(iamUserDto.getId(), requestDto.getEmail(), UserRoleEnum.IAM.getAuthority());
 
         response.addHeader("Authorization", jwt);
 
@@ -93,7 +93,7 @@ public class AuthController {
         return ResponseEntity.ok().body(responseBody);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ROOT')")
     @PostMapping("/createIAM")
     public ResponseEntity<?> creatIAMAccount(@RequestBody CreateAccountRequest request,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
@@ -107,7 +107,7 @@ public class AuthController {
         return ResponseEntity.ok().body(userDto);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ROOT')")
     @GetMapping("/showMembers")
     public ResponseEntity<List<IAMUserDto>> getMembers(@AuthenticationPrincipal JwtAuthentication jwtAuthentication){
 

@@ -1,6 +1,7 @@
 package com.f4.fqs.user.dto.IAM;
 
 import com.f4.fqs.user.model.IAMUser;
+import com.f4.fqs.user.model.UserRoleEnum;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,7 +14,6 @@ public class IAMUserDto {
     private String groupName;
     private String email;
     private String name;
-    private String password;
     private String role;
 
     public static IAMUserDto toResponse(IAMUser iamUser){
@@ -23,8 +23,7 @@ public class IAMUserDto {
                 .email(iamUser.getEmail())
                 .name(iamUser.getName())
                 .groupName(iamUser.getGroupName())
-                .password(iamUser.getPassword())
-                .role(iamUser.getRole())
+                .role(UserRoleEnum.IAM.getAuthority())
                 .build();
     }
 }

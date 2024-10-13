@@ -42,10 +42,10 @@ public class IAMUser {
     private String password;
 
     @Column(name = "role")
-    private String role = "IAM";
+    private UserRoleEnum role;
 
     @Builder
-    public IAMUser(RootUser rootUser, String email, String password, String role, String name, String groupName) {
+    public IAMUser(RootUser rootUser, String email, String password, UserRoleEnum role, String name, String groupName) {
         this.rootUser = rootUser;
         this.email = email;
         this.name = name;

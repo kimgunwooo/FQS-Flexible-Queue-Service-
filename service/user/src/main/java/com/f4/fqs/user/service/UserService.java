@@ -1,6 +1,5 @@
 package com.f4.fqs.user.service;
 
-import static java.rmi.server.LogStream.log;
 
 import com.f4.fqs.user.dto.IAM.IAMUserDto;
 import com.f4.fqs.user.dto.IAM.LogInIAMRequestDto;
@@ -10,11 +9,11 @@ import com.f4.fqs.user.dto.IAM.CreateAccountRequest;
 import com.f4.fqs.user.model.IAMUser;
 import com.f4.fqs.user.model.RootUser;
 import com.f4.fqs.user.dto.ROOT.SignUpRequestDto;
+import com.f4.fqs.user.model.UserRoleEnum;
 import com.f4.fqs.user.repository.IAMRepository;
 import com.f4.fqs.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -86,8 +85,6 @@ public class UserService {
 
         RootUser rootUser = userRepository.findById(request.getGroupId()).get();
 
-        log(groupName);
-
         IAMUser iamUser = IAMUser
                 .builder()
                 .rootUser(rootUser)
@@ -95,7 +92,7 @@ public class UserService {
                 .groupName(groupName)
                 .name(request.getName())
                 .password(encodedPassword)
-                .role(request.getRole())
+                .role(UserRoleEnum.IAM)
                 .build();
 
         iamRepository.save(iamUser);

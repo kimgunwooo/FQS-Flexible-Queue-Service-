@@ -14,6 +14,4 @@ public class CreateAccountRequest {
     private String email;
 
     private String password;
-
-    private String role;
 }
