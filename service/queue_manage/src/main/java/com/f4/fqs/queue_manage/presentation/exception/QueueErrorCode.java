@@ -18,6 +18,7 @@ public enum QueueErrorCode implements ErrorCode {
     QUEUE_NAME_DUPLICATE(409, "QUEUE_001", "이미 존재하는 대기열 이름입니다."),
     QUEUE_NOT_FOUND(404, "QUEUE_002", "존재하지 않는 대기열입니다."),
     QUEUE_USER_NOT_MATCHED(403, "QUEUE_003", "해당 대기열의 root 사용자가 아닙니다."),
+    QUEUE_PORT_NOT_EXITED(410, "QUEUE_004", "더이상 허용 가능한 포트가 존재하지 않습니다."),
     
     ;
 

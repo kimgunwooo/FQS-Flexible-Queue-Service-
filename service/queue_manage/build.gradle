@@ -15,9 +15,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+//    implementation 'com.github.docker-java:docker-java:3.0.6'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // jaxb
+//    implementation 'jakarta.xml.bind:jaxb-api:3.0.1'
+//    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+//    implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
+
+
 }
 
 dependencyManagement {
