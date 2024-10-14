@@ -7,16 +7,16 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/fqs_user
-    username: root
-    password: password
+    url: jdbc:postgresql://localhost:5432/fqs2
+    username: postgres
+    password: 1234
 
   jpa:
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
-        hbm2ddl.auto: update
+        hbm2ddl.auto: create
         default_batch_fetch_size: 100
     open-in-view: false
     show-sql: true
