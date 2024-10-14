@@ -11,13 +11,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RestController
 public class AuthController {
 
@@ -57,5 +54,10 @@ public class AuthController {
         SuccessResponseBody<UserDto> responseBody = new SuccessResponseBody<>(userDto);
 
         return ResponseEntity.ok().body(responseBody);
+    }
+
+    @GetMapping
+    public String getOrder() {
+        return "Order";
     }
 }

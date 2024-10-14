@@ -1,4 +1,4 @@
-package com.f4.fqs.gateway.application.dto;
+package com.f4.fqs.gateway.application.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,6 @@ import java.util.Collection;
 public class UserDto {
 
     private Long userId;
-    private String username;
     private Collection<String> roles;
 
 }
