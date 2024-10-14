@@ -1,4 +1,4 @@
-package com.f4.fqs.auth.dto;
+package com.f4.fqs.user.dto.ROOT;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
