@@ -10,8 +10,8 @@ spring:
     redis:
       host: localhost
       port: 6379
-      username: default
-      password: systempass
+#      username: default
+#      password: systempass
   cloud:
     gateway:
       routes:
@@ -27,14 +27,10 @@ spring:
           uri: lb://queue-service
           predicates:
             - Path=/api/queue/**
-        - id: event-store
-          uri: lb://event_store
+        - id: queueManage-service
+          uri: lb://queueManage-service
           predicates:
-            - Path=/store/**
-        - id: queue
-          uri: lb://queue
-          predicates:
-            - Path=/queue/**
+            - Path=/api/queueManage/**
       discovery:
         locator:
           enabled: true
