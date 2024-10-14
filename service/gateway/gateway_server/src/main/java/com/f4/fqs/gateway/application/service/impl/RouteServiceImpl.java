@@ -17,7 +17,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public Flux<ApiRoute> getAll() {
         // 모든 ApiRoute를 가져오기 위해 키를 생성하고 Flux로 반환
-        return reactiveRedisTemplate.keys(ROUTE_KEY_PREFIX)
+        return reactiveRedisTemplate.keys(ROUTE_KEY_PREFIX + "*")
                 .flatMap(key -> reactiveRedisTemplate.opsForValue().get(key));
     }
 }

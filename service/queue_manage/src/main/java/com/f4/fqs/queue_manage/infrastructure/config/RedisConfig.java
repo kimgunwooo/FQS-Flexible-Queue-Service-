@@ -1,5 +1,6 @@
 package com.f4.fqs.queue_manage.infrastructure.config;
 
+import com.f4.fqs.gateway_domain.domain.ApiRoute;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -11,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -36,4 +39,20 @@ public class RedisConfig {
         return template;
     }
 
+    @Bean
+    public RedisTemplate<String, ApiRoute> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, ApiRoute> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        // Jackson2JsonRedisSerializer 또는 GenericJackson2JsonRedisSerializer 사용
+        Jackson2JsonRedisSerializer<ApiRoute> jsonSerializer = new Jackson2JsonRedisSerializer<>(ApiRoute.class);
+
+        // RedisTemplate에 직렬화 설정
+        template.setKeySerializer(RedisSerializer.string());
+        template.setValueSerializer(jsonSerializer);
+        template.setHashKeySerializer(RedisSerializer.string());
+        template.setHashValueSerializer(jsonSerializer);
+
+        return template;
+    }
 }
