@@ -1,6 +1,8 @@
 package com.f4.fqs.queue.infrastructure.aop;
 
 import com.f4.fqs.commons.domain.exception.BusinessException;
+import com.f4.fqs.eventStore.infrastructure.aop.AuthorizationAspect;
+import com.f4.fqs.eventStore.infrastructure.aop.AuthorizationRequired;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 
