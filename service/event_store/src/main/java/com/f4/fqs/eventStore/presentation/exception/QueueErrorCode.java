@@ -1,4 +1,4 @@
-package com.f4.fqs.queue.presentation.exception;
+package com.f4.fqs.eventStore.presentation.exception;
 
 import com.f4.fqs.commons.domain.exception.ErrorCode;
 import lombok.Getter;
@@ -15,9 +15,14 @@ public enum QueueErrorCode implements ErrorCode {
     NOT_AUTHORIZATION(403, "SECURITY_001", "권한이 없습니다."),
 
     // Queue
-    NOT_EXIST_WAITING_INFO(400, "QUEUE_001", "대기열에 존재하지 않는 사용자입니다"),
-    CONSUME_SIZE_MUST_BE_OVER_ZERO(400, "QUEUE_002", "대기열 소모 크기는 양수여야 합니다"),
-;
+    QUEUE_NAME_DUPLICATE(409, "QUEUE_001", "이미 존재하는 대기열 이름입니다."),
+
+    // QueuePackage
+    QUEUE_PACKAGE_NOT_FOUND(404, "QUEUE_PACKAGE_001", "존재하지 않는 대기열 패키지 입니다."),
+
+    // QueueBean
+    QUEUE_BEAN_NOT_FOUND(404, "QUEUE_BEAN_001", "존재하지 않는 대기열 Bean 입니다."),
+    ;
 
     private final int status;
     private final String code;

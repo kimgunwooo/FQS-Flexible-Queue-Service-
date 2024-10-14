@@ -6,7 +6,6 @@ import com.f4.fqs.queue.application.response.AddQueueResponse;
 import com.f4.fqs.queue.application.response.ConsumeQueueResponse;
 import com.f4.fqs.queue.application.response.FindRankResponse;
 import com.f4.fqs.queue.application.service.QueueService;
-import com.f4.fqs.queue.infrastructure.exception.QueueErrorCode;
 import com.f4.fqs.queue.presentation.request.AddQueueRequest;
 import com.f4.fqs.queue.presentation.request.FindRankRequest;
 import lombok.RequiredArgsConstructor;

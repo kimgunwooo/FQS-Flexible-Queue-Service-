@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: queue
+    name: ${SERVICE_NAME}
 #  r2dbc:
 #    url: r2dbc:mysql://localhost:3306/queue
 #    username: root
@@ -13,7 +13,7 @@ spring:
 #    pool.max-size: 50
   data:
     redis:
-      host: localhost
+      host: ${REDIS_HOST}
       port: 6379
       username: default
       password: systempass
@@ -28,10 +28,7 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    consumer:
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 management:
   endpoints:

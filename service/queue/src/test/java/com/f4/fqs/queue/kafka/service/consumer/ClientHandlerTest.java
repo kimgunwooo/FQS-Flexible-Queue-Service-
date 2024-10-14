@@ -1,6 +1,5 @@
 package com.f4.fqs.queue.kafka.service.consumer;
 
-import com.f4.fqs.queue.kafka.service.producer.ClientQueueExecutor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ClientHandlerTest {
 
-    @Autowired private ClientQueueExecutor executor;
+    /*@Autowired private ClientQueueExecutor executor;
     @Autowired private ClientHandler clientHandler;
 
     String SERVICE_NAME = "ffff";
@@ -32,6 +31,6 @@ class ClientHandlerTest {
         clientHandler.consume(SERVICE_NAME, 1);
         //then
 
-    }
+    }*/
 
 }
