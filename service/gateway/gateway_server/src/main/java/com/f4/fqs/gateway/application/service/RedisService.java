@@ -1,3 +1,4 @@
+// 당장 사용 안 해서 일단 주석 처리
 //package com.f4.fqs.gateway.application.service;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;

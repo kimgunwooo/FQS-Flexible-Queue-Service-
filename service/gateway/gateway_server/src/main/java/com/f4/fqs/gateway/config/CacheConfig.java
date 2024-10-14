@@ -1,5 +1,5 @@
 //package com.f4.fqs.gateway.config;
-//
+// 당장 사용 안 해서 일단 주석 처리
 //import org.springframework.cache.annotation.EnableCaching;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
