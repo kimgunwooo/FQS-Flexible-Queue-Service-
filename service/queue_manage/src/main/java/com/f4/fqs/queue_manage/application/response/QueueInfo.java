@@ -1,4 +1,4 @@
-package com.f4.fqs.queue_manage.application.service;
+package com.f4.fqs.queue_manage.application.response;
 
 import com.f4.fqs.queue_manage.domain.model.Queue;
 import com.fasterxml.jackson.annotation.JsonFormat;
