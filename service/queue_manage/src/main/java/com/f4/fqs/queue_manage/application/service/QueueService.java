@@ -5,6 +5,7 @@ import com.f4.fqs.queue_manage.application.response.CloseQueueResponse;
 import com.f4.fqs.queue_manage.application.response.CreateQueueResponse;
 import com.f4.fqs.queue_manage.application.response.UpdateQueueExpirationTimeResponse;
 import com.f4.fqs.queue_manage.domain.model.Queue;
+import com.f4.fqs.queue_manage.infrastructure.docker.DockerService;
 import com.f4.fqs.queue_manage.infrastructure.repository.QueueRepository;
 import com.f4.fqs.queue_manage.presentation.request.CreateQueueRequest;
 import com.f4.fqs.queue_manage.presentation.request.UpdateExpirationTimeRequest;
@@ -31,6 +32,8 @@ public class QueueService {
     private final QueueRepository queueRepository;
     private final ObjectMapper objectMapper;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final DockerService dockerService;
+    private final PortManager portManager;
 
     @Transactional
     public CreateQueueResponse createQueue(CreateQueueRequest request, Long userId) {
@@ -42,12 +45,16 @@ public class QueueService {
 
         // TODO. userId 존재 확인?
 
-        Queue queue = Queue.from(request, secretKey, userId);
+        int springPort = portManager.allocateSpringPort();
+        int redisPort = portManager.allocateRedisPort();
+
+        Queue queue = Queue.from(request, secretKey, userId, springPort, redisPort);
         Queue savedQueue = queueRepository.save(queue);
 
         this.queueInfoSaveToRedis(secretKey, savedQueue);
 
-        // TODO. 개인별 인스턴스 생성 (비동기)
+        // TODO. 이미지를 큐 서버로 변경하기 + (추가기능)이미지를 옵션값에 따라 동적으로 수정하기.
+        dockerService.runServices(savedQueue.getName(), springPort, redisPort, "kwforu/hello-controller");
 
         return new CreateQueueResponse(savedQueue.getId(), savedQueue.getSecretKey());
     }
@@ -87,6 +94,9 @@ public class QueueService {
         Queue queue = this.validateQueueOwnership(queueId, userId);
         queue.closeQueue(false, LocalDateTime.now());
         // TODO. 실제 서버 인스턴스 종료 로직
+        dockerService.stopServices(queue.getName());
+        portManager.releaseSpringPort(queue.getSpringPort());
+        portManager.releaseRedisPort(queue.getRedisPort());
         return new CloseQueueResponse(queue.getId(), queue.getExpirationTime());
     }
 
