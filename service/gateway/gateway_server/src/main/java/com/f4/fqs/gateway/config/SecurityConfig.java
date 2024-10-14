@@ -5,6 +5,7 @@ import com.f4.fqs.gateway.application.response.UserDto;
 import com.f4.fqs.gateway.application.service.RedisService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.lang.Objects;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -36,27 +38,29 @@ public class SecurityConfig {
 
     private final RedisService redisService;
 
+    private List<String> WHITE_LIST = List.of(
+            "/auth/signup", //회원가입
+            "/auth/login", //로그인
+            "/routes/refresh-routes"
+    );
+
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .addFilterAt(jwtAuthenticationFilter(redisService), SecurityWebFiltersOrder.HTTP_BASIC); // csrf 비활성화
+                .addFilterAt(jwtAuthenticationFilter(), SecurityWebFiltersOrder.HTTP_BASIC); // csrf 비활성화
 
         return http.build();
     }
 
 
-    public WebFilter jwtAuthenticationFilter(RedisService redisService) {
+    public WebFilter jwtAuthenticationFilter() {
         //  jwt 인증 처리 필터
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
-            log.debug("Request Path: {}", path);
 
-            // 로그 추가: Authorization 헤더 확인
-
-            // /api/user/login과 /api/user/signup 경로는 필터를 적용하지 않음 (토큰을 받아야 되기 때문)
-            if ("/api/user/login".equals(path) || "/api/user/signup".equals(path)) {
-                log.debug("Skipping filter for path: {}", path);
+            if(WHITE_LIST.stream().anyMatch(i -> i.equals(path))) {
+                log.info("Skipping filter for path: {}", path);
                 return chain.filter(exchange);
             }
 
@@ -69,13 +73,13 @@ public class SecurityConfig {
             log.info("secretkey header: {}", secretKeyHeader); // 로그 추가
 
             // 조건: secretKey가 있을 경우 JWT 검증을 생략
-            if (secretKeyHeader != null && !secretKeyHeader.isEmpty()) {
+            if (!Objects.isEmpty(secretKeyHeader)) {
                 log.info("Secret key is provided, skipping JWT validation");
                 return chain.filter(exchange);  // JWT 검증을 건너뜀
             }
 
             // JWT 검증 필요
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            if (!Objects.isEmpty(authHeader) && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
                 log.info("Extracted token: {}", token); // 로그 추가
 
@@ -102,7 +106,7 @@ public class SecurityConfig {
 
                     Long userId = Long.valueOf(claims.get("id").toString());
                     String role = claims.get("role").toString();
-                    log.info("UserId from claims: {}", userId); // 로그 추가
+                    log.info("checked user: {}[{}]", userId, role); // 로그 추가
 
                     var key = "user:" + userId;
                     var userDto = redisService.getValueAsClass(key, UserDto.class);
@@ -113,9 +117,10 @@ public class SecurityConfig {
                         log.info("User data retrieved: {}", userDto);
                     }
 
-                    var finalUserDto = Optional.ofNullable(
+                    /*var finalUserDto = Optional.ofNullable(
                             redisService.getValueAsClass("user:" + userId, UserDto.class)
                     ).orElseThrow(() -> new UsernameNotFoundException("User " + userId + " not found"));
+                    */
 
                     // 사용자 정보를 새로운 헤더에 추가
                     ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
@@ -127,8 +132,6 @@ public class SecurityConfig {
                     // 수정된 요청으로 필터 체인 계속 처리
                     ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
 
-                    System.out.println("PASS VALIDATION PROCESS ");
-
                     return chain.filter(modifiedExchange);
 
                 } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
@@ -137,7 +140,8 @@ public class SecurityConfig {
                 }
             }
 
-            return chain.filter(exchange);
+            throw new RuntimeException("올바르지 않는 요청입니다");
+
         };
     }
 }
