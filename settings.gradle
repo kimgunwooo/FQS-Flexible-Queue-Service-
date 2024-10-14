@@ -10,5 +10,6 @@ include 'service:auth'
 include 'service:user'
 include 'service:queue'
 include 'service:queue_manage'
+include 'service:event_store'
 
 include 'common:domain'
