@@ -28,9 +28,13 @@ public class DockerService {
         );
 
         String springCommand = String.format(
-                "echo 1541 | sudo -S docker run -d --name %s_queue_server -p %d:8080 -e SPRING_REDIS_HOST=%s_redis -e SPRING_REDIS_PORT=6379 %s",
-                name, springPort, name, springImage
+                "echo 1541 | sudo -S docker run -d --name %s_queue_server -p %d:8080 " +
+                        "-e SERVICE_NAME=%s " +
+                        "-e REDIS_HOST=%s_redis " +
+                        "%s",
+                name, springPort, name, name, springImage
         );
+
 
         executeCommand(redisCommand);
         executeCommand(springCommand);
