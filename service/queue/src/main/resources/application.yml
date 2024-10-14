@@ -1,22 +1,22 @@
 server:
-  port: 19094
+  port: 19096
 
 spring:
   application:
-    name: queue-service
-
-  r2dbc:
-    url: r2dbc:mysql://localhost:3306/queue
-    username: root
-    password: password
-    pool.enabled: true
-    pool.initial-size: 10
-    pool.max-size: 50
-
+    name: queue
+#  r2dbc:
+#    url: r2dbc:mysql://localhost:3306/queue
+#    username: root
+#    password: password
+#    pool.enabled: true
+#    pool.initial-size: 10
+#    pool.max-size: 50
   data:
     redis:
       host: localhost
       port: 6379
+      username: default
+      password: systempass
 
   sql:
     init:

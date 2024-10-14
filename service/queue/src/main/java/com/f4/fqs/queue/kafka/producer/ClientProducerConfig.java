@@ -21,7 +21,7 @@ public class ClientProducerConfig {
                             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
                             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-                            ProducerConfig.ACKS_CONFIG, "1"
+                            ProducerConfig.ACKS_CONFIG, "all"
                         )
                 )
         );

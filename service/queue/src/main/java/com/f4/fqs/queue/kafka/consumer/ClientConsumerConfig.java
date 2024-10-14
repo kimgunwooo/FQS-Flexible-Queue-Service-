@@ -1,6 +1,7 @@
 package com.f4.fqs.queue.kafka.consumer;
 
 
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.ObjectProvider;
@@ -21,7 +22,6 @@ import java.util.Map;
 @Configuration
 public class ClientConsumerConfig {
 
-
     @Bean("default-client-consumer-config")
     public ConsumerFactory<Object, Object> consumerFactory() {
 
@@ -34,7 +34,7 @@ public class ClientConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 
-    @Bean("default-client-consumer")
+    /*@Bean("default-client-consumer")
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
 
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -47,6 +47,13 @@ public class ClientConsumerConfig {
         });
 
         return factory;
+
+    }*/
+
+    @Bean("default-client-consumer")
+    public Consumer<Object, Object> defaultClientConsumer() {
+
+        return consumerFactory().createConsumer();
 
     }
 
