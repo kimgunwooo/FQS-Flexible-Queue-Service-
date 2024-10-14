@@ -6,8 +6,8 @@ spring:
     name: user-service
 
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/fqs_user
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:5432/fqs
     username: root
     password: password
 
