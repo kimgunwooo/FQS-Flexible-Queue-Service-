@@ -4,7 +4,7 @@ import com.f4.fqs.commons.domain.response.ResponseBody;
 import com.f4.fqs.queue_manage.application.response.CloseQueueResponse;
 import com.f4.fqs.queue_manage.application.response.CreateQueueResponse;
 import com.f4.fqs.queue_manage.application.response.UpdateQueueExpirationTimeResponse;
-import com.f4.fqs.queue_manage.application.service.QueueInfo;
+import com.f4.fqs.queue_manage.application.response.QueueInfo;
 import com.f4.fqs.queue_manage.application.service.QueueService;
 import com.f4.fqs.queue_manage.infrastructure.aop.AuthorizationRequired;
 import com.f4.fqs.queue_manage.presentation.request.CreateQueueRequest;
