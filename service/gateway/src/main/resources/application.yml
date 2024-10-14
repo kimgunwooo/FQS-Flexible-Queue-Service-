@@ -27,6 +27,10 @@ spring:
           uri: lb://queue-service
           predicates:
             - Path=/api/queue/**
+        - id: queue
+          uri: lb://queue
+          predicates:
+            - Path=/queue/**
       discovery:
         locator:
           enabled: true

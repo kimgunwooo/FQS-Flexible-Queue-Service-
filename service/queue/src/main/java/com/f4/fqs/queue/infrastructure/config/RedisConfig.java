@@ -1,58 +1,54 @@
 package com.f4.fqs.queue.infrastructure.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.*;
 
-@Slf4j
-@RequiredArgsConstructor
 @Configuration
-public class RedisConfig implements ApplicationListener<ApplicationReadyEvent> {
+@EnableCaching
+public class RedisConfig {
 
-    private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
+//    @Bean
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
 
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
-        reactiveRedisTemplate.opsForValue().get("1")
-                .doOnSuccess(i -> log.info("Initialize to redis connection."))
-                .doOnError((err) -> log.error("Failed to initialize redis connection: {}", err.getMessage()))
-                .subscribe();
-    }
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules(); // LocalDateTime 같은 타입을 위한 모듈 자동 등록
+        objectMapper.deactivateDefaultTyping(); // @class 제거
 
-    @Override
-    public boolean supportsAsyncExecution() {
-        return ApplicationListener.super.supportsAsyncExecution();
+        // Jackson2JsonRedisSerializer 설정
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+//        Jackson2JsonRedisSerializer<String> serializer = new Jackson2JsonRedisSerializer<String>(objectMapper, String.class);
+
+        // 키는 String, 값은 JSON 형식으로 처리
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+
+        return template;
     }
 
     @Bean
-    public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(ReactiveRedisConnectionFactory connectionFactory) {
-        var objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .registerModule(new JavaTimeModule())
-                .disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
+    public ReactiveRedisTemplate<String, String> reactiveRedisTemplate(ReactiveRedisConnectionFactory factory) {
 
-        Jackson2JsonRedisSerializer<Object> jsonSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
+        RedisSerializer<String> serializer = new StringRedisSerializer();
 
-        RedisSerializationContext<String, Object> serializationContext = RedisSerializationContext
-                .<String, Object>newSerializationContext()
-                .key(RedisSerializer.string())
-                .value(jsonSerializer)
-                .hashKey(RedisSerializer.string())
-                .hashValue(jsonSerializer)
+        RedisSerializationContext<String, String> serializationContext = RedisSerializationContext
+                .<String, String>newSerializationContext()
+                .key(serializer)
+                .value(serializer)
+                .hashKey(serializer)
+                .hashValue(serializer)
                 .build();
 
-        return new ReactiveRedisTemplate<>(connectionFactory, serializationContext);
+        return new ReactiveRedisTemplate<>(factory, serializationContext);
     }
 }
