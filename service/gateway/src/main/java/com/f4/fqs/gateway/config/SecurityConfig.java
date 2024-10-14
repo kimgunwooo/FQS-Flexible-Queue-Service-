@@ -45,7 +45,7 @@ public class SecurityConfig {
 
 
     public WebFilter jwtAuthenticationFilter(RedisService redisService) {
-        //  jw 인증 처리 필터
+        //  jwt 인증 처리 필터
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
             log.debug("Request Path: {}", path);
@@ -55,7 +55,7 @@ public class SecurityConfig {
             log.debug("Authorization header: {}", authorizationHeader);
 
             // /api/user/login과 /api/user/signup 경로는 필터를 적용하지 않음 (토큰을 받아야 되기 때문)
-            if ("/api/user/login".equals(path) || "/api/user/signup".equals(path)||"/swagger-ui.html".equals(path)||"/api/service/v3/api-docs".equals(path)) {
+            if ("/user/login".equals(path) || "/user/signup".equals(path)) {
                 log.debug("Skipping filter for path: {}", path);
                 return chain.filter(exchange);
             }
@@ -76,18 +76,24 @@ public class SecurityConfig {
                     log.info("Decoded secret key bytes length: {}", bytes.length); // 로그 추가
 
                     Claims claims = Jwts
-                            .parserBuilder()
+                            .parser()
                             .setSigningKey(secretKey)
                             .build()
                             .parseClaimsJws(token)
                             .getBody();
 
+//                    Claims claims = Jwts
+//                            .parser()
+//                            .verifyWith(secretKey)
+//                            .parseClaimsJws(token)
+//                            .getBody();
+
                     log.info("Claims: {}", claims); // 로그 추가
 
-                    String username = claims.getSubject();
-                    log.info("Username from claims: {}", username); // 로그 추가
+                    String userId = claims.getSubject();
+                    log.info("UserId from claims: {}", userId); // 로그 추가
 
-                    var key1 = "user:" + username;
+                    var key1 = "user:" + userId;
                     var userDto = redisService.getValueAsClass(key1, UserDto.class);
 
                     if (userDto == null) {
@@ -97,12 +103,12 @@ public class SecurityConfig {
                     }
 
                     var finalUserDto = Optional.ofNullable(
-                            redisService.getValueAsClass("user:" + username, UserDto.class)
-                    ).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+                            redisService.getValueAsClass("user:" + userId, UserDto.class)
+                    ).orElseThrow(() -> new UsernameNotFoundException("User " + userId + " not found"));
 
                     // 사용자 정보를 새로운 헤더에 추가
                     ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-                            .header("X-User-Name", username)
+                            .header("X-User-Id", userId)
                             .header("X-User-Roles", String.join(",", userDto.getRoles()))
                             .build();
 
