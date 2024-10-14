@@ -1,6 +1,11 @@
 server:
   port: 19097
 
+payment:
+  kakao:
+    amdin_key : DEV60ED4CBDDBBE2702ABD398DA536FB719711A3
+
+
 spring:
   application:
     name: payment-service
