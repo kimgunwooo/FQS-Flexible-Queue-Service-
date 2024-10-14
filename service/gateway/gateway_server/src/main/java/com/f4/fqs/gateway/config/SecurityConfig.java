@@ -53,8 +53,6 @@ public class SecurityConfig {
             log.debug("Request Path: {}", path);
 
             // 로그 추가: Authorization 헤더 확인
-            String authorizationHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-            log.debug("Authorization header: {}", authorizationHeader);
 
             // /api/user/login과 /api/user/signup 경로는 필터를 적용하지 않음 (토큰을 받아야 되기 때문)
             if ("/api/user/login".equals(path) || "/api/user/signup".equals(path)) {
@@ -63,12 +61,15 @@ public class SecurityConfig {
             }
 
             HttpHeaders headers = exchange.getRequest().getHeaders();
+
             String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
+            String secretKeyHeader = headers.getFirst("secretKey");
 
             log.info("Authorization header: {}", authHeader); // 로그 추가
+            log.info("secretkey header: {}", secretKeyHeader); // 로그 추가
 
             // 조건: secretKey가 있을 경우 JWT 검증을 생략
-            if (secretKey != null && !secretKey.isEmpty()) {
+            if (secretKeyHeader != null && !secretKeyHeader.isEmpty()) {
                 log.info("Secret key is provided, skipping JWT validation");
                 return chain.filter(exchange);  // JWT 검증을 건너뜀
             }
@@ -99,7 +100,8 @@ public class SecurityConfig {
                         return Mono.error(new RuntimeException("JWT Token is expired"));
                     }
 
-                    Long userId = Long.valueOf(claims.getSubject());
+                    Long userId = Long.valueOf(claims.get("id").toString());
+                    String role = claims.get("role").toString();
                     log.info("UserId from claims: {}", userId); // 로그 추가
 
                     var key = "user:" + userId;
@@ -118,12 +120,15 @@ public class SecurityConfig {
                     // 사용자 정보를 새로운 헤더에 추가
                     ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                             .header("X-User-Id", String.valueOf(userId))
-                            .header("X-User-SecretKey", String.valueOf(secretKey))
-                            .header("X-User-Roles", String.join(",", userDto.getRoles()))
+//                            .header("X-User-SecretKey", String.valueOf(secretKey))
+                            .header("X-User-Roles", role)
                             .build();
 
                     // 수정된 요청으로 필터 체인 계속 처리
                     ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
+
+                    System.out.println("PASS VALIDATION PROCESS ");
+
                     return chain.filter(modifiedExchange);
 
                 } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {

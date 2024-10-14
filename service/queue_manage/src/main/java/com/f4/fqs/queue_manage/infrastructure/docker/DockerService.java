@@ -23,12 +23,12 @@ public class DockerService {
     public void runServices(String name, int springPort, int redisPort, String springImage) {
         // TODO. 현재 mac 로컬환경에서는 sudo 명령에 따른 시스템 비밀번호 입력이 필요하기에 다음과 같이 정의
         String redisCommand = String.format(
-                "echo 1541 | sudo -S docker run -d --name %s_redis -p %d:6379 redis:latest",
+                "echo 25351124 | sudo -S docker run -d --name %s_redis -p %d:6379 redis:latest",
                 name, redisPort
         );
 
         String springCommand = String.format(
-                "echo 1541 | sudo -S docker run -d --name %s_queue_server -p %d:8080 -e SPRING_REDIS_HOST=%s_redis -e SPRING_REDIS_PORT=6379 %s",
+                "echo 25351124 | sudo -S docker run -d --name %s_queue_server -p %d:8080 -e SPRING_REDIS_HOST=%s_redis -e SPRING_REDIS_PORT=6379 %s",
                 name, springPort, name, springImage
         );
 
@@ -38,22 +38,22 @@ public class DockerService {
 
     public void stopServices(String name) {
         String redisStopCommand = String.format(
-                "echo 1541 | sudo -S docker stop %s_redis",
+                "echo 25351124 | sudo -S docker stop %s_redis",
                 name
         );
 
         String redisRemoveCommand = String.format(
-                "echo 1541 | sudo -S docker rm %s_redis",
+                "echo 25351124 | sudo -S docker rm %s_redis",
                 name
         );
 
         String springStopCommand = String.format(
-                "echo 1541 | sudo -S docker stop %s_queue_server",
+                "echo 25351124 | sudo -S docker stop %s_queue_server",
                 name
         );
 
         String springRemoveCommand = String.format(
-                "echo 1541 | sudo -S docker rm %s_queue_server",
+                "echo 25351124 | sudo -S docker rm %s_queue_server",
                 name
         );
 

@@ -18,26 +18,27 @@ spring:
         - id: auth-service
           uri: lb://auth-service
           predicates:
-            - Path=/api/auth/**
+            - Path=/auth/**
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/api/user/**
-        - id: queue-service
-          uri: lb://queue-service
+        - id: queue
+          uri: lb://queue
+          predicates:
+            - Path=/queue/**
+        - id: queue-manage-service
+          uri: lb://queue-manage-service
           predicates:
             - Path=/api/queue/**
-        - id: queueManage-service
-          uri: lb://queueManage-service
-          predicates:
-            - Path=/api/queueManage/**
       discovery:
         locator:
           enabled: true
 
 service:
   jwt:
-    secret-key: "WnN3Q2FjQzRrNFl0V1d1TWp0RE5Xemw2RkE0WVYzS2VsR2xpUVF6M0x6dFNXbnc="
+#    secret-key: "WnN3Q2FjQzRrNFl0V1d1TWp0RE5Xemw2RkE0WVYzS2VsR2xpUVF6M0x6dFNXbnc="
+    secret-key: "401b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429080fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae731f5a65ed1"
 
 eureka:
   client:
