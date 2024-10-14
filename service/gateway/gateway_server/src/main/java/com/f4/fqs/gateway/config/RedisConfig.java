@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +38,7 @@ public class RedisConfig implements ApplicationListener<ApplicationReadyEvent> {
     }
 
     @Bean
-    public ReactiveRedisTemplate<String, ApiRoute> reactiveRedisTemplate(@Lazy ReactiveRedisConnectionFactory connectionFactory) {
+    public ReactiveRedisTemplate<String, ApiRoute> reactiveRedisTemplate(ReactiveRedisConnectionFactory connectionFactory) {
         var objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModule(new JavaTimeModule())

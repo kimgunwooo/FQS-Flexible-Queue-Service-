@@ -1,6 +1,7 @@
 // 당장 사용 안 해서 일단 주석 처리
 package com.f4.fqs.gateway.application.service;
 
+import com.f4.fqs.gateway_domain.domain.ApiRoute;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -13,12 +14,12 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisService {
 
-    private final ReactiveRedisTemplate<String, Object> redisTemplate;
+    private final ReactiveRedisTemplate<String, ApiRoute> redisTemplate;
 
     private final ObjectMapper objectMapper;
 
     // 값을 redis에 저장하는 메서드
-    public void setValue(String key, Object value) {
+    public void setValue(String key, ApiRoute value) {
         redisTemplate.opsForValue().set(key, value);
     }
 
