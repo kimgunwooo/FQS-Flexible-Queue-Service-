@@ -15,8 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -35,8 +37,10 @@ public class QueueService {
     private final QueueRepository queueRepository;
     private final ObjectMapper objectMapper;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, ApiRoute> redisRouteTemplate;
     private final DockerService dockerService;
     private final PortManager portManager;
+    private final RestTemplate restTemplate;
 
     @Transactional
     public CreateQueueResponse createQueue(CreateQueueRequest request, Long userId) {
@@ -70,9 +74,9 @@ public class QueueService {
         redisTemplate.opsForSet().add(secretKey, json);
     }
 
-    private String serializeQueueToJson(Queue queue) {
+    private String serializeQueueToJson(Object obj) {
         try {
-            return objectMapper.writeValueAsString(queue);
+            return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize queue to JSON", e);
         }
@@ -82,9 +86,11 @@ public class QueueService {
         ApiRoute apiRoute = new ApiRoute(
                 String.format("%s_queue_server", savedQueue.getName()),
                 String.format("lb://%s", savedQueue.getName()),
+                "ALL",
                 "/queue/**"
         );
-        redisTemplate.opsForValue().set(ROUTE_KEY_PREFIX, apiRoute);
+        redisRouteTemplate.opsForValue().set(ROUTE_KEY_PREFIX + savedQueue.getId(), apiRoute);
+        this.refreshRoutes();
     }
 
     private void runDockerService(String queueName, int springPort, int redisPort) {
@@ -121,6 +127,8 @@ public class QueueService {
         dockerService.stopServices(queue.getName());
         portManager.releaseSpringPort(queue.getSpringPort());
         portManager.releaseRedisPort(queue.getRedisPort());
+        redisRouteTemplate.delete(ROUTE_KEY_PREFIX + queue.getId());
+        this.refreshRoutes();
         return new CloseQueueResponse(queue.getId(), queue.getExpirationTime());
     }
 
@@ -134,4 +142,20 @@ public class QueueService {
 
         return queue;
     }
+
+    private void refreshRoutes() {
+        String refreshRoutesUrl = "http://localhost:19091/routes/refresh-routes"; // TODO. 추후 webclient나 feignclient로 변경
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(refreshRoutesUrl, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("Successfully refreshed routes: {}", response.getBody());
+            } else {
+                log.warn("Failed to refresh routes. Status code: {}", response.getStatusCode());
+            }
+        } catch (Exception e) {
+            log.error("Failed to refresh routes: {}", e.getMessage(), e);
+        }
+    }
+
 }
