@@ -44,7 +44,7 @@ services:
       - ec2-user_fqs_network
 
   eureka:
-    image: kwforu/eureka:latest  # Docker Hub에 푸시한 Eureka 이미지
+    image: kwforu/eureka:latest
     ports:
       - "19090:19090"
     depends_on:
@@ -54,7 +54,7 @@ services:
       - ec2-user_fqs_network
 
   gateway:
-    image: kwforu/gateway_server:latest  # Docker Hub에 푸시한 Gateway 이미지
+    image: kwforu/gateway_server:latest
     ports:
       - "19091:19091"
     depends_on:
@@ -63,7 +63,7 @@ services:
       - ec2-user_fqs_network
 
   auth:
-    image: kwforu/auth:latest  # Docker Hub에 푸시한 Auth 이미지
+    image: kwforu/auth:latest
     ports:
       - "19092:19092"
     depends_on:
@@ -72,7 +72,7 @@ services:
       - ec2-user_fqs_network
 
   user:
-    image: kwforu/user:latest  # Docker Hub에 푸시한 User 이미지
+    image: kwforu/user:latest
     ports:
       - "19093:19093"
     depends_on:
@@ -81,13 +81,13 @@ services:
       - ec2-user_fqs_network
 
   queue_manage:
-    image: kwforu/queue_manage:latest  # Docker Hub에 푸시한 Queue Manage 이미지
+    image: kwforu/queue_manage:latest
     ports:
       - "19095:19095"
     depends_on:
       - eureka
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock # DooD
     networks:
       - ec2-user_fqs_network
 
