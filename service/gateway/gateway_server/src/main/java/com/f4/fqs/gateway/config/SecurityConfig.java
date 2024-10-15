@@ -17,7 +17,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -26,7 +25,6 @@ import reactor.core.publisher.Mono;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Configuration
@@ -38,14 +36,17 @@ public class SecurityConfig {
 
     private final RedisService redisService;
 
-    private List<String> WHITE_LIST = List.of(
+    private final List<String> JWT_WHITE_LIST = List.of(
             "/auth/signup", //회원가입
             "/auth/login/root", //로그인
             "/auth/login/iam", //로그인
-            "/routes/refresh-routes",
-            "/temporary-queue/queue/add",
-            "/temporary-queue/queue/consume",
-            "/temporary-queue/queue/ranks"
+            "/routes/refresh-routes" //route 갱신
+    );
+
+    private final List<String> SECRETKEY_PATH_LIST = List.of(
+            "/queue/add",
+            "/queue/consume",
+            "/queue/ranks"
     );
 
     @Bean
@@ -63,8 +64,8 @@ public class SecurityConfig {
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
 
-            if(WHITE_LIST.stream().anyMatch(i -> i.equals(path))) {
-                log.info("Skipping filter for path: {}", path);
+            if(JWT_WHITE_LIST.stream().anyMatch(i -> i.equals(path))) {
+                log.info("jwt white list call by path: {}", path);
                 return chain.filter(exchange);
             }
 
@@ -76,8 +77,12 @@ public class SecurityConfig {
             log.info("Authorization header: {}", authHeader); // 로그 추가
             log.info("secretkey header: {}", secretKeyHeader); // 로그 추가
 
-            // 조건: secretKey가 있을 경우 JWT 검증을 생략
-            if (!Objects.isEmpty(secretKeyHeader)) {
+            // 조건: secretKey가 있을 경우 전용 Validation
+            if (!Objects.isEmpty(secretKeyHeader) &&
+                    path.split("/").length == 4 &&
+                    SECRETKEY_PATH_LIST.stream().anyMatch(path::endsWith) &&
+                    redisService.hasKey(secretKeyHeader)
+            ) {
                 log.info("Secret key is provided, skipping JWT validation");
                 return chain.filter(exchange);  // JWT 검증을 건너뜀
             }
@@ -144,7 +149,7 @@ public class SecurityConfig {
                 }
             }
 
-            throw new RuntimeException("올바르지 않는 요청입니다");
+            throw new IllegalArgumentException("올바르지 않는 요청입니다");
 
         };
     }
