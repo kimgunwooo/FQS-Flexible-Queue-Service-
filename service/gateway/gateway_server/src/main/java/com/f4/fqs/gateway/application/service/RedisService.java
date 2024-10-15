@@ -37,9 +37,9 @@ public class RedisService {
 
 
     // redis에 키가 존재하는지 확인하는 메서드
-//    public Boolean hasKey(String key) {
-//        return redisTemplate.hasKey(key);
-//    }
+    public Boolean hasKey(String key) {
+        return redisTemplate.hasKey(key).block();
+    }
 
 
 }
