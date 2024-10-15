@@ -16,8 +16,7 @@ public class DockerService {
     public void runServices(String name, int springPort, int redisPort, String springImage) {
         String[] commands = {
                 String.format(DockerCommands.REDIS_RUN, name, redisPort),
-                String.format(DockerCommands.SPRING_RUN, name, springPort, name, name, springImage),
-                String.format(DockerCommands.EXEC_INSTALL_DOCKER, name)
+                String.format(DockerCommands.SPRING_RUN, name, springPort, name, name, springImage)
         };
 
         for (String command : commands) {

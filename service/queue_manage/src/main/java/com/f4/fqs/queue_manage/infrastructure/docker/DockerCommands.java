@@ -5,7 +5,6 @@ public interface DockerCommands {
     String SPRING_RUN = "docker run -d --name %s_queue_server --network ec2-user_fqs_network -p %d:8080 " +
             "-e SERVICE_NAME=%s " +
             "-e REDIS_HOST=%s_redis %s";
-    String EXEC_INSTALL_DOCKER = "docker exec %s_queue_server amazon-linux-extras install docker -y";
 
     String REDIS_STOP = "docker stop %s_redis";
     String REDIS_REMOVE = "docker rm %s_redis";
