@@ -7,9 +7,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/queue
-    username: root
-    password: password
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/fqs
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
 
   jpa:
     properties:
@@ -19,11 +19,11 @@ spring:
         hbm2ddl.auto: update
         default_batch_fetch_size: 100
     open-in-view: false
-    show-sql: true
+    show-sql: false
 
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
 management:
@@ -35,10 +35,10 @@ management:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/
+      defaultZone: http://eureka:19090/eureka/
 
 docker:
   image-name: kwforu/queue
 
 gateway:
-  refresh-url: http://localhost:19091/routes/refresh-routes
+  refresh-url: ${REFRESH_DEV_URL}
