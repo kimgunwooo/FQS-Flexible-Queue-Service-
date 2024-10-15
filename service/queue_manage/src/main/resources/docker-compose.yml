@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   spring-service:
-    image: kwforu/hello-controller:latest
+    image: kwforu/queue_server:latest
     container_name: spring_service
     ports:
       - "8080:8080"
