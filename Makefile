@@ -15,5 +15,6 @@ image-and-push:
 	#./gradlew clean :service:gateway:gateway_server:jib
 	#./gradlew clean :service:user:jib
 	#./gradlew clean :service:auth:jib
-	./gradlew clean :service:queue_manage:jib
-	#./gradlew clean :service:queue:jib
+	#./gradlew clean :service:queue_manage:jib
+	./gradlew clean :service:queue:jib
+	./gradlew clean :service:event_store:jib
