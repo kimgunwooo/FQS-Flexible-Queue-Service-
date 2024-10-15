@@ -41,4 +41,4 @@ docker:
   image-name: kwforu/queue
 
 gateway:
-  refresh-url: ${REFRESH_DEV_URL}
+  refresh-url: http://gateway:19091/routes/refresh-routes
