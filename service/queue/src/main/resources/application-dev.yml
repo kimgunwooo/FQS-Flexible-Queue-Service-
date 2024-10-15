@@ -1,0 +1,34 @@
+server:
+  port: 19096
+
+spring:
+  application:
+    name: ${SERVICE_NAME}
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    open-in-view: false
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:19090/eureka/

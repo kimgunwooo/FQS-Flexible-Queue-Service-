@@ -14,6 +14,7 @@ import com.f4.fqs.queue_manage.presentation.request.UpdateExpirationTimeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,14 @@ public class QueueService {
     private final DockerService dockerService;
     private final PortManager portManager;
     private final RestTemplate restTemplate;
+
+    private static final String HTTP_METHOD_ALL = "ALL";
+
+    @Value("${docker.image-name}")
+    private String dockerImage;
+
+    @Value("${gateway.refresh-url}")
+    private String refreshUrl;
 
     @Transactional
     public CreateQueueResponse createQueue(CreateQueueRequest request, Long userId) {
@@ -83,18 +92,21 @@ public class QueueService {
     }
 
     private void addApiRoute(Queue savedQueue) {
-        ApiRoute apiRoute = new ApiRoute(
-                String.format("%s_queue_server", savedQueue.getName()),
-                String.format("lb://%s", savedQueue.getName()),
-                "ALL",
-                "/queue/**"
-        );
+        ApiRoute apiRoute = createApiRoute(savedQueue);
         redisRouteTemplate.opsForValue().set(ROUTE_KEY_PREFIX + savedQueue.getId(), apiRoute);
         this.refreshRoutes();
     }
 
+    private ApiRoute createApiRoute(Queue savedQueue) {
+        String routeName = String.format("%s_queue_server", savedQueue.getName());
+        String serviceUrl = String.format("lb://%s", savedQueue.getName());
+        String routePath = String.format("/%s/queue/**", savedQueue.getName());
+
+        return new ApiRoute(routeName, serviceUrl, HTTP_METHOD_ALL, routePath);
+    }
+
     private void runDockerService(String queueName, int springPort, int redisPort) {
-        dockerService.runServices(queueName, springPort, redisPort, "kwforu/hello-controller");
+        dockerService.runServices(queueName, springPort, redisPort, dockerImage);
     }
 
     private String generateRandomString() {
@@ -123,7 +135,6 @@ public class QueueService {
     public CloseQueueResponse closeQueue(Long queueId, Long userId) {
         Queue queue = this.validateQueueOwnership(queueId, userId);
         queue.closeQueue(false, LocalDateTime.now());
-        // TODO. 실제 서버 인스턴스 종료 로직
         dockerService.stopServices(queue.getName());
         portManager.releaseSpringPort(queue.getSpringPort());
         portManager.releaseRedisPort(queue.getRedisPort());
@@ -144,7 +155,7 @@ public class QueueService {
     }
 
     private void refreshRoutes() {
-        String refreshRoutesUrl = "http://localhost:19091/routes/refresh-routes"; // TODO. 추후 webclient나 feignclient로 변경
+        String refreshRoutesUrl = refreshUrl; // TODO. 추후 webclient나 feignclient로 변경
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(refreshRoutesUrl, String.class);
 

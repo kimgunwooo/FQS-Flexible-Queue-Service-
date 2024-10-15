@@ -22,7 +22,7 @@ public class KafkaConfig {
 
                 SenderOptions.create(
                         Map.of(
-                            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
+                            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092",
                             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class,
                             ProducerConfig.ACKS_CONFIG, "all"

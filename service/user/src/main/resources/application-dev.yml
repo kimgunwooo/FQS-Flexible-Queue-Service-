@@ -1,15 +1,15 @@
 server:
-  port: 19095
+  port: 19093
 
 spring:
   application:
-    name: queue-manage-service
+    name: user-service
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/queue
-    username: root
-    password: password
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/fqs
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
 
   jpa:
     properties:
@@ -19,12 +19,7 @@ spring:
         hbm2ddl.auto: update
         default_batch_fetch_size: 100
     open-in-view: false
-    show-sql: true
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
+    show-sql: false
 
 management:
   endpoints:
@@ -35,10 +30,4 @@ management:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/
-
-docker:
-  image-name: kwforu/queue
-
-gateway:
-  refresh-url: http://localhost:19091/routes/refresh-routes
+      defaultZone: http://eureka:19090/eureka/
