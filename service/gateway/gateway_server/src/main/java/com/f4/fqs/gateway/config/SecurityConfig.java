@@ -40,8 +40,12 @@ public class SecurityConfig {
 
     private List<String> WHITE_LIST = List.of(
             "/auth/signup", //회원가입
-            "/auth/login", //로그인
-            "/routes/refresh-routes"
+            "/auth/login/root", //로그인
+            "/auth/login/iam", //로그인
+            "/routes/refresh-routes",
+            "/temporary-queue/queue/add",
+            "/temporary-queue/queue/consume",
+            "/temporary-queue/queue/ranks"
     );
 
     @Bean
