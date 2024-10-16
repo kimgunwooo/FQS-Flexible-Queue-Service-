@@ -7,7 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(
 		scanBasePackages = {
 				"com.f4.fqs.queue",
-				"com.f4.fqs.commons.domain"
+				"com.f4.fqs.commons.domain",
+				"com.f4.fqs.commons.store"
 		}
 )
 public class QueueApplication {

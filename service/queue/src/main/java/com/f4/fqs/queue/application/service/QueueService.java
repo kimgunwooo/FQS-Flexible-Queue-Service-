@@ -1,11 +1,11 @@
 package com.f4.fqs.queue.application.service;
 
 import com.f4.fqs.commons.domain.exception.BusinessException;
-import com.f4.fqs.commons.domain.message.QueueCommand;
+import com.f4.fqs.commons.store.kafka.producer.EventSourcingExecutor;
+import com.f4.fqs.commons.store.message.QueueCommand;
 import com.f4.fqs.queue.application.response.AddQueueResponse;
 import com.f4.fqs.queue.application.response.ConsumeQueueResponse;
 import com.f4.fqs.queue.application.response.FindRankResponse;
-import com.f4.fqs.queue.kafka.producer.EventSourcingExecutor;
 import com.f4.fqs.queue.presentation.exception.QueueErrorCode;
 import com.f4.fqs.queue.presentation.request.FindRankRequest;
 import com.f4.fqs.queue.redis.service.RedisService;
@@ -91,7 +91,6 @@ public class QueueService {
 
     public Mono<FindRankResponse> getCurrentOrder(FindRankRequest request) {
 
-//        long myRank = redisService.getMyRank(ParsingUtil.makeJsonString(request.userId()));
         long myRank = redisService.getMyRank(request.userId().toString());
 
         return Mono.just(new FindRankResponse(myRank));

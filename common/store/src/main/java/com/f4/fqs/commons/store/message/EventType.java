@@ -1,4 +1,4 @@
-package com.f4.fqs.commons.domain.message;
+package com.f4.fqs.commons.store.message;
 
 import lombok.Getter;
 

@@ -1,9 +1,10 @@
 package com.f4.fqs.eventStore.kafka.config;
 
 
-import com.f4.fqs.commons.domain.message.QueueCommand;
+import com.f4.fqs.commons.store.message.QueueCommand;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -21,11 +22,14 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String SERVER;
+
     @Bean
     public ConsumerFactory<String, QueueCommand> consumerFactory() {
 
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, SERVER);
         configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, Boolean.TRUE);
 
         return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(), new JsonDeserializer<>(QueueCommand.class, false));

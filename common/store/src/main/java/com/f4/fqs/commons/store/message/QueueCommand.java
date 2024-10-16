@@ -1,4 +1,4 @@
-package com.f4.fqs.commons.domain.message;
+package com.f4.fqs.commons.store.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

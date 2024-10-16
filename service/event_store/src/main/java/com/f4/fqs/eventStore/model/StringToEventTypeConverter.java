@@ -1,6 +1,6 @@
 package com.f4.fqs.eventStore.model;
 
-import com.f4.fqs.commons.domain.message.EventType;
+import com.f4.fqs.commons.store.message.EventType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.WritingConverter;
 

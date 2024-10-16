@@ -1,9 +1,10 @@
-package com.f4.fqs.queue.kafka.config;
+package com.f4.fqs.commons.store.kafka.config;
 
 
-import com.f4.fqs.commons.domain.message.QueueCommand;
+import com.f4.fqs.commons.store.message.QueueCommand;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
@@ -15,6 +16,10 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String SERVER;
+
+
     @Bean
     public ReactiveKafkaProducerTemplate<String, QueueCommand> reactiveKafkaTemplate() {
 
@@ -22,7 +27,7 @@ public class KafkaConfig {
 
                 SenderOptions.create(
                         Map.of(
-                            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092",
+                            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, SERVER,
                             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class,
                             ProducerConfig.ACKS_CONFIG, "all"

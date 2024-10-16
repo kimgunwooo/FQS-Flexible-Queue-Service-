@@ -14,3 +14,4 @@ include 'service:queue_manage'
 include 'service:event_store'
 
 include 'common:domain'
+include 'common:store'
