@@ -28,3 +28,46 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+jib {
+    from {
+        image = "amazoncorretto:17"
+        platforms {
+            platform {
+                architecture = 'amd64'
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = "kwforu/" + "${project.name}".toLowerCase() + ":${project.version}"
+        tags = ['latest']
+    }
+    container {
+        ports = ['19093']
+        jvmFlags = [
+                "-server",
+                "-Xmx512M",
+                "-Dspring.profiles.active=dev",
+                "-XX:+UseContainerSupport",
+                "-XX:InitialRAMPercentage=60.0",
+                "-XX:MaxRAMPercentage=60.0",
+                "-XX:+UseZGC",
+                "-XX:+DisableExplicitGC",
+                "-XX:MetaspaceSize=256M",
+                "-XX:MaxMetaspaceSize=256M",
+                "-Duser.timezone=UTC",
+                "-Djava.net.preferIPv4Stack=true",
+                "-Djava.net.preferIPv6Addresses=false",
+                "-Dnetworkaddress.cache.ttl=0",
+                "-Dnetworkaddress.cache.negative.ttl=0",
+        ]
+        environment = [
+                MYSQL_HOST: System.getenv("MYSQL_HOST"),
+                MYSQL_PORT: System.getenv("MYSQL_PORT"),
+                MYSQL_USER: System.getenv("MYSQL_USER"),
+                MYSQL_PASSWORD: System.getenv("MYSQL_PASSWORD"),
+                JWT_SECRET_KEY: System.getenv("JWT_SECRET_KEY"),
+        ]
+    }
+}
