@@ -35,13 +35,8 @@ public class QueueController {
     @PostMapping
     public ResponseEntity<ResponseBody<CreateQueueResponse>> createQueue(
             @RequestBody @Valid CreateQueueRequest request,
-            BindingResult bindingResult,
             @RequestHeader("X-User-Id") Long userId,
             HttpServletRequest httpRequest) {
-
-        if(bindingResult.hasErrors()) {
-            throw new BusinessException(QueueErrorCode.INVALID_QUEUE_NAME_PATTERN);
-        }
 
         return ResponseEntity.ok(createSuccessResponse(queueService.createQueue(request, userId)));
     }
