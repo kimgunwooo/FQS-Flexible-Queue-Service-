@@ -1,0 +1,44 @@
+server:
+  port: 19095
+
+spring:
+  application:
+    name: queue-manage-service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/fqs
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        hbm2ddl.auto: update
+        default_batch_fetch_size: 100
+    open-in-view: false
+    show-sql: false
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:19090/eureka/
+
+docker:
+  image-name: kwforu/queue
+
+gateway:
+  refresh-url: http://gateway:19091/routes/refresh-routes

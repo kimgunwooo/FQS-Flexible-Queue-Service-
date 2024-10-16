@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 ext {
@@ -8,6 +9,7 @@ ext {
 
 dependencies {
     implementation project(':common:domain')
+    implementation project(':service:gateway:gateway_domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -15,9 +17,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+//    implementation 'com.github.docker-java:docker-java:3.0.6'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // jaxb
+//    implementation 'jakarta.xml.bind:jaxb-api:3.0.1'
+//    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+//    implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
+
+
 }
 
 dependencyManagement {
@@ -28,4 +38,46 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jib {
+    from {
+        image = "amazoncorretto:17"
+        platforms {
+            platform {
+                architecture = 'amd64'
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = "kwforu/" + "${project.name}".toLowerCase() + ":${project.version}"
+        tags = ['latest']
+    }
+    container {
+        ports = ['19095']
+        jvmFlags = [
+                "-server",
+                "-Xmx512M",
+                "-Dspring.profiles.active=dev",
+                "-XX:+UseContainerSupport",
+                "-XX:InitialRAMPercentage=60.0",
+                "-XX:MaxRAMPercentage=60.0",
+                "-XX:+UseZGC",
+                "-XX:+DisableExplicitGC",
+                "-XX:MetaspaceSize=256M",
+                "-XX:MaxMetaspaceSize=256M",
+                "-Duser.timezone=UTC",
+                "-Djava.net.preferIPv4Stack=true",
+                "-Djava.net.preferIPv6Addresses=false",
+                "-Dnetworkaddress.cache.ttl=0",
+                "-Dnetworkaddress.cache.negative.ttl=0",
+        ]
+        environment = [
+                MYSQL_HOST: System.getenv("MYSQL_HOST"),
+                MYSQL_PORT: System.getenv("MYSQL_PORT"),
+                MYSQL_USER: System.getenv("MYSQL_USER"),
+                MYSQL_PASSWORD: System.getenv("MYSQL_PASSWORD"),
+        ]
+    }
 }

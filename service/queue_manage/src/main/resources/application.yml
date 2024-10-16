@@ -36,3 +36,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+
+docker:
+  image-name: kwforu/queue
+
+gateway:
+  refresh-url: http://localhost:19091/routes/refresh-routes

@@ -49,8 +49,14 @@ public class Queue extends BaseEntity{
     @Column(nullable = false)
     private Boolean isActive;
 
+    @Column(nullable = false)
+    private int springPort;
+
+    @Column(nullable = false)
+    private int redisPort;
+
     @Builder(access = AccessLevel.PROTECTED)
-    public Queue(LocalDateTime expirationTime, int maxMessageSize, boolean messageDuplicationAllowed, boolean messageOrderGuaranteed, int messageRetentionPeriod, String name, String secretKey, Long userId) {
+    public Queue(LocalDateTime expirationTime, int maxMessageSize, boolean messageDuplicationAllowed, boolean messageOrderGuaranteed, int messageRetentionPeriod, String name, String secretKey, Long userId, int springPort, int redisPort) {
         this.expirationTime = expirationTime;
         this.maxMessageSize = maxMessageSize;
         this.messageDuplicationAllowed = messageDuplicationAllowed;
@@ -60,9 +66,11 @@ public class Queue extends BaseEntity{
         this.secretKey = secretKey;
         this.userId = userId;
         this.isActive = true;
+        this.springPort = springPort;
+        this.redisPort = redisPort;
     }
 
-    public static Queue from(CreateQueueRequest request, String secretKey, Long userId) {
+    public static Queue from(CreateQueueRequest request, String secretKey, Long userId, int springPort, int redisPort) {
         return Queue.builder()
                 .expirationTime(request.expirationTime())
                 .maxMessageSize(request.maxMessageSize())
@@ -72,6 +80,8 @@ public class Queue extends BaseEntity{
                 .name(request.name())
                 .secretKey(secretKey)
                 .userId(userId)
+                .springPort(springPort)
+                .redisPort(redisPort)
                 .build();
     }
 

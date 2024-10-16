@@ -5,11 +5,13 @@ plugins {
 rootProject.name = 'fqs'
 
 include 'service:eureka'
-include 'service:gateway'
+include 'service:gateway:gateway_domain'
+include 'service:gateway:gateway_server'
 include 'service:auth'
 include 'service:user'
 include 'service:queue'
 include 'service:queue_manage'
 include 'service:payment'
+include 'service:event_store'
 
 include 'common:domain'
