@@ -1,6 +1,9 @@
 package com.f4.fqs.user.service;
 
 
+import static com.f4.fqs.user.exception.UserErrorCode.*;
+
+import com.f4.fqs.commons.domain.exception.BusinessException;
 import com.f4.fqs.user.dto.IAM.IAMUserDto;
 import com.f4.fqs.user.dto.IAM.LogInIAMRequestDto;
 import com.f4.fqs.user.dto.ROOT.LogInRequestDto;
@@ -33,7 +36,7 @@ public class UserService {
     public RootUserDto signup(SignUpRequestDto requestDto) {
 
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new BusinessException(EMAIL_ALREADY_EXISTS);
         }
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
@@ -49,10 +52,10 @@ public class UserService {
     public RootUserDto login(LogInRequestDto requestDto) {
 
         RootUser rootUser = userRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("등록된 이메일이 아닙니다."));
+                .orElseThrow(() -> new BusinessException(EMAIL_NOT_REGISTERED));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), rootUser.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+            throw new BusinessException(INCORRECT_PASSWORD);
         }
 
         return RootUserDto.toResponse(rootUser);
@@ -62,10 +65,10 @@ public class UserService {
     public IAMUserDto login(LogInIAMRequestDto requestDto) {
 
         IAMUser iamUser = iamRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("등록된 이메일이 아닙니다."));
+                .orElseThrow(() -> new BusinessException(EMAIL_NOT_REGISTERED));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), iamUser.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+            throw new BusinessException(INCORRECT_PASSWORD);
         }
 
         return IAMUserDto.toResponse(iamUser);
@@ -76,20 +79,16 @@ public class UserService {
     public IAMUserDto createAccount(CreateAccountRequest request) {
 
         if (iamRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new BusinessException(EMAIL_ALREADY_EXISTS);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-
-        String groupName = userRepository.findById(request.getGroupId()).get().getGroupName();
-
         RootUser rootUser = userRepository.findById(request.getGroupId()).get();
 
         IAMUser iamUser = IAMUser
                 .builder()
                 .rootUser(rootUser)
                 .email(request.getEmail())
-                .groupName(groupName)
                 .name(request.getName())
                 .password(encodedPassword)
                 .role(UserRoleEnum.IAM)
@@ -98,13 +97,6 @@ public class UserService {
         iamRepository.save(iamUser);
 
         return IAMUserDto.toResponse(iamUser);
-    }
-
-    public RootUserDto getUserInfo(Long id) {
-        
-        RootUser dto =  userRepository.findById(id).get();
-
-        return  RootUserDto.toResponse(dto);
     }
 
     @Transactional

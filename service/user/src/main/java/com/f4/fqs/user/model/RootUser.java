@@ -29,16 +29,16 @@ public class RootUser {
     @Column(name = "id",nullable = false)
     private Long id;
 
-    @Column(name = "group_name")
+    @Column(name = "group_name",nullable = false)
     private String groupName;
 
-    @Column(name = "group_leader_name")
+    @Column(name = "group_leader_name",nullable = false)
     private String groupLeaderName;
 
-    @Column(name = "email")
+    @Column(name = "email",nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password",nullable = false)
     private String password;
 
     @Column(name = "role")

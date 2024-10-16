@@ -1,5 +1,6 @@
 package com.f4.fqs.user.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,27 +31,23 @@ public class IAMUser {
     @JoinColumn(name = "group_id")
     private RootUser rootUser;
 
-    @Column(name = "group_name")
-    private String groupName;
-
-    @Column(name = "name")
+    @Column(name = "name",nullable = false)
     private String name;
-
-    @Column(name = "email")
+    
+    @Column(name = "email",nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password",nullable = false)
     private String password;
 
     @Column(name = "role")
     private UserRoleEnum role;
 
     @Builder
-    public IAMUser(RootUser rootUser, String email, String password, UserRoleEnum role, String name, String groupName) {
+    public IAMUser(RootUser rootUser, String email, String password, UserRoleEnum role, String name) {
         this.rootUser = rootUser;
         this.email = email;
         this.name = name;
-        this.groupName = groupName;
         this.password = password;
         this.role = role;
     }

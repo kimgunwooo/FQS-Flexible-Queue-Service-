@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LogInRequestDto {
     @NotBlank(message = "이메일을 입력하지 않았습니다.")
-    @Email(message = "이메일 형식이 아닙니다.")
     private String email;
 
     @NotBlank(message = "비밀번호를 입력하지 않았습니다.")
