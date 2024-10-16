@@ -100,22 +100,11 @@ public class SecurityConfig {
                     log.info("Decoded secret key bytes length: {}", bytes.length); // 로그 추가
 
                     Claims claims = Jwts
-                            .parser()
-                            .setSigningKey(secretKey)
-                            .build()
-                            .parseClaimsJws(token)
-                            .getBody();
-
-                    log.info("Claims: {}", claims); // 로그 추가
-
-                    /*
-                        // JWT 토큰 만료 검증
-                        if (claims.getExpiration().before(new Date())) {
-                            log.error("JWT token has expired");
-                            exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(401));
-
-                            return exchange.getResponse().setComplete();
-                    }*/
+                                .parser()
+                                .setSigningKey(secretKey)
+                                .build()
+                                .parseClaimsJws(token)
+                                .getBody();
 
                     Long userId = Long.valueOf(claims.get("id").toString());
                     String role = claims.get("role").toString();
@@ -147,8 +136,12 @@ public class SecurityConfig {
 
                     return chain.filter(modifiedExchange);
 
-                } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
+                } catch (io.jsonwebtoken.JwtException  e) {
                     log.error("JWT validation error: {}", e.getMessage(), e); // 로그 추가
+
+                    exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(401));
+                    return exchange.getResponse().setComplete();
+
                 }
             }
 
