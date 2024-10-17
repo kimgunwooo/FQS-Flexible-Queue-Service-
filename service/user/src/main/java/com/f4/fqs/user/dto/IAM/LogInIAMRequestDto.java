@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LogInIAMRequestDto {
 
-    private String groupEmail;
     private String email;
     private String password;
 }
