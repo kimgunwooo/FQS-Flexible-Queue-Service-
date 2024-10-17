@@ -13,11 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Mono;
@@ -86,9 +89,7 @@ public class SecurityConfig {
                 log.info("Secret key is provided, skipping JWT validation");
                 return chain.filter(exchange);  // JWT 검증을 건너뜀
             }
-
-            // JWT 검증 필요
-            if (!Objects.isEmpty(authHeader) && authHeader.startsWith("Bearer ")) {
+            else if (!Objects.isEmpty(authHeader) && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
                 log.info("Extracted token: {}", token); // 로그 추가
 
@@ -99,19 +100,11 @@ public class SecurityConfig {
                     log.info("Decoded secret key bytes length: {}", bytes.length); // 로그 추가
 
                     Claims claims = Jwts
-                            .parser()
-                            .setSigningKey(secretKey)
-                            .build()
-                            .parseClaimsJws(token)
-                            .getBody();
-
-                    log.info("Claims: {}", claims); // 로그 추가
-
-                    // JWT 토큰 만료 검증
-                    if (claims.getExpiration().before(new Date())) {
-                        log.error("JWT token has expired");
-                        return Mono.error(new RuntimeException("JWT Token is expired"));
-                    }
+                                .parser()
+                                .setSigningKey(secretKey)
+                                .build()
+                                .parseClaimsJws(token)
+                                .getBody();
 
                     Long userId = Long.valueOf(claims.get("id").toString());
                     String role = claims.get("role").toString();
@@ -143,13 +136,18 @@ public class SecurityConfig {
 
                     return chain.filter(modifiedExchange);
 
-                } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
+                } catch (io.jsonwebtoken.JwtException  e) {
                     log.error("JWT validation error: {}", e.getMessage(), e); // 로그 추가
-                    return Mono.error(new RuntimeException("Invalid JWT Token"));
+
+                    exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(401));
+                    return exchange.getResponse().setComplete();
+
                 }
             }
 
-            throw new IllegalArgumentException("올바르지 않는 요청입니다");
+            exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(403));
+
+            return exchange.getResponse().setComplete();
 
         };
     }

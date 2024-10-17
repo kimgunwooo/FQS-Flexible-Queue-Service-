@@ -1,6 +1,5 @@
 plugins {
     id 'application'
-    id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 ext {
@@ -15,6 +14,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation project(":common:domain")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
