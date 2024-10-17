@@ -1,22 +1,27 @@
 server:
-  port: 19093
+  port: 19097
+
+payment:
+  kakao:
+    amdin_key : DEV60ED4CBDDBBE2702ABD398DA536FB719711A3
+
 
 spring:
   application:
-    name: user-service
+    name: payment-service
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:5432/fqs
-    username: root
-    password: password
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/fqs2
+    username: postgres
+    password: 1234
 
   jpa:
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
-        hbm2ddl.auto: update
+        hbm2ddl.auto: create
         default_batch_fetch_size: 100
     open-in-view: false
     show-sql: true

@@ -22,7 +22,6 @@ public class IAMUserDto {
                 .groupId(iamUser.getRootUser().getId())
                 .email(iamUser.getEmail())
                 .name(iamUser.getName())
-                .groupName(iamUser.getGroupName())
                 .role(UserRoleEnum.IAM.getAuthority())
                 .build();
     }
