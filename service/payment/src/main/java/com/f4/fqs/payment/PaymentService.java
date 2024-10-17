@@ -21,7 +21,7 @@ public class PaymentService {
 
     private String SECRET_KEY_PREFIX = "SECRET_KEY ";
 
-    private PaymentReadyDto paymentDto;
+    private String tid;
 
     public PaymentReadyDto PaymentReady(PaymentReadyRequest request) {
 
@@ -43,7 +43,6 @@ public class PaymentService {
         parameters.put("cancel_url", "http://developers.kakao.com/cancle"); // 취소 시 redirect url
         parameters.put("fail_url", "http://developers.kakao.com/fail"); // 실패 시 redirect url
 
-
         // 파라미터, 헤더
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
@@ -56,10 +55,15 @@ public class PaymentService {
         return responseEntity.getBody();
     }
 
+
+    public void saveTid(String tid) {
+        this.tid = tid;
+    }
+
     public PaymentApproveDto payApprove(String pgToken){
         Map<String, String> parameters = new HashMap<>();
         parameters.put("cid", cid);
-        parameters.put("tid", paymentDto.getTid());
+        parameters.put("tid", tid);
         parameters.put("partner_order_id", "가맹점 주문 번호");
         parameters.put("partner_user_id", "가맹점 회원 ID");
         parameters.put("pg_token", pgToken);
