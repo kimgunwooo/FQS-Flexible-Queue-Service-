@@ -1,8 +1,8 @@
 package com.f4.fqs.queue.application.service;
 
 import com.f4.fqs.commons.domain.exception.BusinessException;
-import com.f4.fqs.commons.store.kafka.producer.EventSourcingExecutor;
-import com.f4.fqs.commons.store.message.QueueCommand;
+import com.f4.fqs.commons.kafka_common.message.QueueCommand;
+import com.f4.fqs.commons.reactive_kafka.kafka.producer.EventSourcingExecutor;
 import com.f4.fqs.queue.application.response.AddQueueResponse;
 import com.f4.fqs.queue.application.response.ConsumeQueueResponse;
 import com.f4.fqs.queue.application.response.FindRankResponse;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

@@ -8,7 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 		scanBasePackages = {
 				"com.f4.fqs.queue",
 				"com.f4.fqs.commons.domain",
-				"com.f4.fqs.commons.store"
+				"com.f4.fqs.commons.reactive_kafka",
+				"com.f4.fqs.commons.kafka_common",
 		}
 )
 public class QueueApplication {
