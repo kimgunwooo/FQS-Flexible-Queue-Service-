@@ -1,12 +1,16 @@
-package com.f4.fqs.payment;
+package com.f4.fqs.payment.service;
 
+import com.f4.fqs.payment.domain.Payment;
+import com.f4.fqs.payment.dto.PaymentApproveDto;
+import com.f4.fqs.payment.dto.PaymentReadyDto;
+import com.f4.fqs.payment.dto.PaymentReadyRequest;
+import com.f4.fqs.payment.repository.PaymentRepository;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,6 +18,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
+
+    private final PaymentRepository paymentRepository;
+
     static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
 
     @Value("${payment.kakao.amdin_key}")
@@ -39,7 +46,6 @@ public class PaymentService {
 
         parameters.put("approval_url", "http://localhost:19097/payment/approve"); // 성공 시 redirect url
 
-//        parameters.put("approval_url", "https://developers.kakao.com/success"); // 성공 시 redirect url
         parameters.put("cancel_url", "http://developers.kakao.com/cancle"); // 취소 시 redirect url
         parameters.put("fail_url", "http://developers.kakao.com/fail"); // 실패 시 redirect url
 
@@ -90,5 +96,20 @@ public class PaymentService {
 
 
         return httpHeaders;
+    }
+
+    public void savePaymentInfo(PaymentApproveDto response) {
+
+        Payment payment = Payment.builder()
+                .tid(response.getTid())
+                .price(response.getAmount().getTotal())
+                .itemName(response.getItem_name())
+                .month(response.getQuantity())
+                .created_at(response.getCreated_at())
+                .approved_at(response.getApproved_at())
+                .build();
+
+    paymentRepository.save(payment);
+
     }
 }

@@ -1,4 +1,4 @@
-package com.f4.fqs.payment;
+package com.f4.fqs.payment.domain;
 
 import lombok.Getter;
 

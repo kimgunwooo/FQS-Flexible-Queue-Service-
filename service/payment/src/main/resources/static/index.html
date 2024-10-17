@@ -38,19 +38,32 @@
 
 <form action="/payment/ready" method="POST">
   <label for="itemName">상품명:</label>
-  <input type="text" id="itemName" name="itemName" value="라이브러리 구독">
+  <input type="text" id="itemName" name="itemName" value="라이브러리 구독" readonly>
 
   <label for="quantity">수량:</label>
-  <input type="number" id="quantity" name="quantity" placeholder="개월수를 입력하세요" value="1" min="1" required>
+  <input type="number" id="quantity" name="quantity" placeholder="개월수를 입력하세요" value="1" min="1" required oninput="calculateTotal()">
 
   <label for="totalAmount">총 금액 (원):</label>
-  <input type="number" id="totalAmount" name="totalAmount" placeholder="총 금액을 입력하세요" required>
+  <input type="number" id="totalAmount" name="totalAmount" value="50000" readonly>
 
   <label for="taxFreeAmount">비과세 금액 (원):</label>
-  <input type="number" id="taxFreeAmount" name="taxFreeAmount" placeholder="비과세 금액을 입력하세요" value="0" required>
+  <input type="number" id="taxFreeAmount" name="taxFreeAmount" value="45000" readonly>
 
   <button type="submit">결제 요청</button>
 </form>
 
 </body>
+<script>
+  const pricePerMonth = 50000;
+
+  function calculateTotal() {
+    const quantity = document.getElementById('quantity').value;
+    const totalAmount = quantity * pricePerMonth;
+    const taxFreeAmount = totalAmount * 0.9;
+
+    document.getElementById('totalAmount').value = totalAmount;
+    document.getElementById('taxFreeAmount').value = taxFreeAmount;
+  }
+</script>
+
 </html>
