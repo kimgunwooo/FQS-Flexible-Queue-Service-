@@ -26,7 +26,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info
+        include: health, info, loggers, mappings, metrics, shutdown, prometheus
 
 eureka:
   client:

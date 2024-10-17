@@ -1,9 +1,50 @@
 global:
-  scrape_interval: 15s
+  scrape_interval: 15s # 매트릭 수집 주기
+
+#scrape_configs:
+#  - job_name: 'spring-boot'
+#    metrics_path: '/actuator/prometheus'
+#    static_configs:
+#      - targets: ['host.docker.internal:8080']
 
 scrape_configs:
-  - job_name: 'spring-boot'
+  - job_name: 'eureka'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['host.docker.internal:8080']
+      - targets: [ 'host.docker.internal:19090' ]  # Eureka Server의 메트릭 엔드포인트
+
+  - job_name: 'gateway-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:19091']  # Gateway 서비스의 메트릭 엔드포인트
+
+  - job_name: 'auth-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:19092']  # Auth 서비스의 메트릭 엔드포인트
+
+  - job_name: 'user-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:19093']  # User 서비스의 메트릭 엔드포인트
+
+  - job_name: 'queue-manage-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:19095' ]  # queue_manage 서비스의 메트릭 엔드포인트
+
+  - job_name: 'temporary-queue-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:19096' ]  # queue 서비스의 메트릭 엔드포인트
+
+  - job_name: 'payment-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:19097' ]  # payment 서비스의 메트릭 엔드포인트
+
+  - job_name: 'event_store-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:19098' ]  # event_store 서비스의 메트릭 엔드포인트
 

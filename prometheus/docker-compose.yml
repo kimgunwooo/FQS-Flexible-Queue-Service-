@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"  # Prometheus의 기본 포트
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml  # 호스트의 prometheus.yml 파일을 컨테이너에 마운트
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'  # 설정 파일 경로 지정
