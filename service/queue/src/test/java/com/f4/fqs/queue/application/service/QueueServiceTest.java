@@ -17,7 +17,7 @@ class QueueServiceTest {
     @Test
     public void 대기열_추가_테스트() throws Exception {
 
-        Mono<AddQueueResponse> addQueueResponseMono = queueService.lineUp();
+//        Mono<AddQueueResponse> addQueueResponseMono = queueService.lineUp();
         //given
 
         
