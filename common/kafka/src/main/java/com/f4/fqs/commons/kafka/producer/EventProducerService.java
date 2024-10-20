@@ -22,7 +22,7 @@ public final class EventProducerService implements ProducerService {
     @Override
     public void send(String topic, QueueCommand message) {
 
-        CompletableFuture.runAsync(() -> producer.send(topic, message))
+        CompletableFuture.runAsync(() -> producer.send(topic, topic, message))
                 .exceptionally((e) -> {
                     throw new BusinessException(StoreErrorCode.INVALID_INPUT_VALUE);
                 });
