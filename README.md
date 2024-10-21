@@ -59,16 +59,18 @@ Then you can check the secretKey in the response.
 ```
 
 ### Queue Service
-4-0. Create a ticket in the queue.
+4-0. Verify if the 'queueName' and 'secretKey' match.
 ```java
-POST /{queueName}/api/queue // Enter the name used when creating the queue in {queueName}.
+GET /api/queue/validate?queueName={queueName} // Enter the name used when creating the queue in {queueName}.
 
 Request Headers 
 {
   "secretKey" : {secretKey} // Add the unique secretKey issued during queue creation to the header before making the request.
 }
 
-Then you can check the unique string of the ticket in the response.
+Verify if the 'queueName' and 'secretKey' match. 
+You will receive a Boolean value in response: 
+true if they match, and false if they do not match.
 
 Response Body
 {
@@ -124,7 +126,7 @@ Response Body
 
 4-3. Check my current rank.
 ```java
-POST /{queueName}/api/queue/ranks?identifier={numberID} // Enter the name used when creating the queue in {queueName}. Enter the unique ID of the ticket to check the rank in {numberID}.
+Get /{queueName}/api/queue/ranks?identifier={numberID} // Enter the name used when creating the queue in {queueName}. Enter the unique ID of the ticket to check the rank in {numberID}.
 
 Request Headers 
 {
