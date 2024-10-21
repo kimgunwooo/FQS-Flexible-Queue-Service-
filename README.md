@@ -5,9 +5,9 @@
 ## 🏃‍♂️‍➡️ OUR GOAL
 - It targets developers who are building domains that experience large-scale traffic, such as ticketing.
 - It offers a convenient queue service to backend developers in the form of a library.
-![our service range.png](our%20service%20range.png)
 
 ## 👍 Merit
+![our service range.png](our%20service%20range.png)
 - It takes on the load required for queue management.
 - It provides a library for easy usage.
 - Using root privileges and subordinate privilege accounts allows for more detailed management.
@@ -59,6 +59,26 @@ Then you can check the secretKey in the response.
 ```
 
 ### Queue Service
+4-0. Create a ticket in the queue.
+```java
+POST /{queueName}/api/queue // Enter the name used when creating the queue in {queueName}.
+
+Request Headers 
+{
+  "secretKey" : {secretKey} // Add the unique secretKey issued during queue creation to the header before making the request.
+}
+
+Then you can check the unique string of the ticket in the response.
+
+Response Body
+{
+   "success": "true",
+   "data": {
+       "userId": "f728287c-2d0b-4fd0-9196-5669269804c3"
+   }
+}
+```
+
 4-1. Create a ticket in the queue.
 ```java
 POST /{queueName}/api/queue // Enter the name used when creating the queue in {queueName}.
