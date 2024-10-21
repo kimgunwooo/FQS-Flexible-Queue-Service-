@@ -23,7 +23,7 @@ public class KafkaConfig {
 
 
     @Bean
-    public ReactiveKafkaProducerTemplate<String, QueueCommand> reactiveKafkaTemplate() {
+    public ReactiveKafkaProducerTemplate<String, QueueCommand> reactiveKafkaProducerTemplate() {
 
         return new ReactiveKafkaProducerTemplate<> (
 

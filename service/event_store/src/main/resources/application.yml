@@ -27,7 +27,7 @@ spring:
         default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
         spring.json.trusted.packages: "*"
         default.deserialization.exception.handler: com.f4.fqs.eventStore.kafka.exception.CustomDeserializationExceptionHandler
-        auto_offset_reset_config: earliest
+        auto_offset_reset_config: none
         auto.create.topics.enable: true
 
 

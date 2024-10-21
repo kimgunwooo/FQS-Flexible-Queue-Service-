@@ -26,7 +26,6 @@ import static com.f4.fqs.commons.domain.response.ResponseUtil.createSuccessRespo
 @RequestMapping("/store")
 public class QueueController {
 
-    private final QueueService queueService;
     private final EventHandler eventHandler;
 
     @GetMapping
