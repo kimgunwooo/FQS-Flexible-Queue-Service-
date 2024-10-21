@@ -32,7 +32,7 @@ class EventHandlerTest {
     @Test
     public void 카프카_스트림_테스트() throws Exception {
 
-        eventHandler.consume(
+        eventHandler.replay(
                 "aspa-2030-winter",
                 LocalDateTime.of(2024, 10, 20, 15, 20, 0),
                 LocalDateTime.of(2024, 10, 20, 15, 30, 0)
