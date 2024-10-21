@@ -9,6 +9,8 @@ ext {
 
 dependencies {
 
+    implementation 'com.github.loki4j:loki-logback-appender:1.5.1' // Loki
+
     //jwt
     implementation 'io.jsonwebtoken:jjwt:0.12.6'
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.6'
