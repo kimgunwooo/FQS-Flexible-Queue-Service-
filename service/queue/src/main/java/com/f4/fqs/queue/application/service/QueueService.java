@@ -1,11 +1,11 @@
 package com.f4.fqs.queue.application.service;
 
 import com.f4.fqs.commons.domain.exception.BusinessException;
-import com.f4.fqs.commons.domain.message.QueueCommand;
+import com.f4.fqs.commons.kafka_common.message.QueueCommand;
+import com.f4.fqs.commons.reactive_kafka.kafka.producer.EventSourcingExecutor;
 import com.f4.fqs.queue.application.response.AddQueueResponse;
 import com.f4.fqs.queue.application.response.ConsumeQueueResponse;
 import com.f4.fqs.queue.application.response.FindRankResponse;
-import com.f4.fqs.queue.kafka.producer.EventSourcingExecutor;
 import com.f4.fqs.queue.presentation.exception.QueueErrorCode;
 import com.f4.fqs.queue.presentation.request.FindRankRequest;
 import com.f4.fqs.queue.redis.service.RedisService;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +30,7 @@ public class QueueService {
     private String SERVICE_NAME;
 
 
-    public Mono<AddQueueResponse> lineUp() {
+    public Mono<String> lineUp() {
 
         /*return Mono.fromCallable(UUID::randomUUID)
                 .flatMap(uuid -> {
@@ -55,11 +54,11 @@ public class QueueService {
         CompletableFuture.runAsync(() -> executor.createEvent(QueueCommand.addQueueCommand(SERVICE_NAME, uuid, LocalDateTime.now())));
 
 
-        return Mono.just(new AddQueueResponse(uuid.toString()));
+        return Mono.just(uuid.toString());
 
     }
 
-    public Mono<ConsumeQueueResponse> consume(int size) {
+    public Mono<List<String>> consume(int size) {
 
         if(size <= 0) {
             return Mono.error(new BusinessException(QueueErrorCode.CONSUME_SIZE_MUST_BE_OVER_ZERO));
@@ -85,15 +84,14 @@ public class QueueService {
 
                 })
                 .doOnError(e -> log.error("대기열 {}개 소모 중 문제가 발생했습니다.", size));*/
-        return Mono.just(new ConsumeQueueResponse(list));
+        return Mono.just(list);
 
     }
 
-    public Mono<FindRankResponse> getCurrentOrder(FindRankRequest request) {
+    public Mono<Long> getCurrentOrder(String identifier) {
 
-//        long myRank = redisService.getMyRank(ParsingUtil.makeJsonString(request.userId()));
-        long myRank = redisService.getMyRank(request.userId().toString());
+        long myRank = redisService.getMyRank(identifier);
 
-        return Mono.just(new FindRankResponse(myRank));
+        return Mono.just(myRank);
     }
 }

@@ -9,6 +9,7 @@ ext {
 
 dependencies {
 	implementation project(':common:domain')
+	implementation project(':common:kafka_common')
 
 	implementation 'com.github.loki4j:loki-logback-appender:1.5.1' // Loki
 

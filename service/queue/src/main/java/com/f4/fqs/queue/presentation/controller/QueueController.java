@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.f4.fqs.commons.domain.response.ResponseUtil.createSuccessResponse;
@@ -31,42 +32,42 @@ public class QueueController {
     private final QueueService queueService;
 
     @PostMapping("/add")
-    public Mono<ResponseEntity<ResponseBody<AddQueueResponse>>> createQueue(@PathVariable String serviceName) {
+    public Mono<ResponseEntity<ResponseBody<String>>> createQueue(@PathVariable String serviceName) {
 
         if(!Objects.equals(serverName, serviceName)) {
             return Mono.error(() -> new BusinessException(QueueErrorCode.INVALID_SERVER_REQUEST));
         }
 
-        Mono<ResponseEntity<ResponseBody<AddQueueResponse>>> result = queueService.lineUp()
+        Mono<ResponseEntity<ResponseBody<String>>> result = queueService.lineUp()
                 .map(response -> ResponseEntity.ok(createSuccessResponse(response)));
 
         return result;
     }
 
     @PostMapping("/consume")
-    public Mono<ResponseEntity<ResponseBody<ConsumeQueueResponse>>> consumeQueue(
+    public Mono<ResponseEntity<ResponseBody<List<String>>>> consumeQueue(
             @PathVariable String serviceName,
             @RequestParam(defaultValue = "1") int size) {
 
         if(!Objects.equals(serverName, serviceName)) {
             return Mono.error(() -> new BusinessException(QueueErrorCode.INVALID_SERVER_REQUEST));
         }
-        Mono<ResponseEntity<ResponseBody<ConsumeQueueResponse>>> result = queueService.consume(size)
+        Mono<ResponseEntity<ResponseBody<List<String>>>> result = queueService.consume(size)
                 .map(response -> ResponseEntity.ok(createSuccessResponse(response)));
 
         return result;
     }
 
-    @PostMapping("/ranks")
-    public Mono<ResponseEntity<ResponseBody<FindRankResponse>>> getCurrentOrder(
+    @GetMapping("/ranks")
+    public Mono<ResponseEntity<ResponseBody<Long>>> getCurrentOrder(
             @PathVariable String serviceName,
-            @RequestBody FindRankRequest request) {
+            @RequestParam String identifier) {
 
         if(!Objects.equals(serverName, serviceName)) {
             return Mono.error(() -> new BusinessException(QueueErrorCode.INVALID_SERVER_REQUEST));
         }
 
-        Mono<ResponseEntity<ResponseBody<FindRankResponse>>> result = queueService.getCurrentOrder(request)
+        Mono<ResponseEntity<ResponseBody<Long>>> result = queueService.getCurrentOrder(identifier)
                 .map(response -> ResponseEntity.ok(createSuccessResponse(response)));
 
         return result;

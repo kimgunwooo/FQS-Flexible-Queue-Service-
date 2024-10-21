@@ -9,6 +9,8 @@ ext {
 
 dependencies {
     implementation project(':common:domain')
+    implementation project(':common:kafka_common')
+    implementation project(':common:kafka')
     implementation project(':service:gateway:gateway_domain')
 
     implementation 'com.github.loki4j:loki-logback-appender:1.5.1' // Loki
@@ -22,6 +24,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.kafka:spring-kafka'
 //    implementation 'com.github.docker-java:docker-java:3.0.6'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
