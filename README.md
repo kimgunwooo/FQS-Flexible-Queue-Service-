@@ -30,7 +30,7 @@ Request Body
 
 2. Log in to receive an authentication token.
 ```java
-POST /auth/signin
+POST /auth/login/root
         
 Request Body
 {
