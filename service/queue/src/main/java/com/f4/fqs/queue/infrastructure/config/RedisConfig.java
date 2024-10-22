@@ -14,7 +14,7 @@ import org.springframework.data.redis.serializer.*;
 @EnableCaching
 public class RedisConfig {
 
-//    @Bean
+/*//    @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
@@ -34,7 +34,9 @@ public class RedisConfig {
         template.setHashValueSerializer(new StringRedisSerializer());
 
         return template;
-    }
+    }*/
+
+
 
     @Bean
     public ReactiveRedisTemplate<String, String> reactiveRedisTemplate(ReactiveRedisConnectionFactory factory) {

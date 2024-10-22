@@ -18,4 +18,9 @@ public class EventSourcingExecutor {
         eventProducerService.send(CommonConstraints.EVENT, queueCommand);
     }
 
+    public void divideEvent(String topicName, QueueCommand queueCommand) {
+        log.info("divide from event-store :: {}", queueCommand);
+        eventProducerService.send(topicName, queueCommand);
+    }
+
 }

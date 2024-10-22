@@ -21,6 +21,15 @@ spring:
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    streams:
+      properties:
+        default.key.serde: org.apache.kafka.common.serialization.Serdes
+        default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
+        spring.json.trusted.packages: "*"
+        default.deserialization.exception.handler: com.f4.fqs.eventStore.kafka.exception.CustomDeserializationExceptionHandler
+        auto_offset_reset_config: none
+        auto.create.topics.enable: true
+
 
 management:
   endpoints:

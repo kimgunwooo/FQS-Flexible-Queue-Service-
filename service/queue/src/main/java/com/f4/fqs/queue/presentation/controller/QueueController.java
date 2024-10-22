@@ -2,6 +2,7 @@ package com.f4.fqs.queue.presentation.controller;
 
 import com.f4.fqs.commons.domain.exception.BusinessException;
 import com.f4.fqs.commons.domain.response.ResponseBody;
+import com.f4.fqs.commons.domain.response.ResponseUtil;
 import com.f4.fqs.queue.application.response.AddQueueResponse;
 import com.f4.fqs.queue.application.response.ConsumeQueueResponse;
 import com.f4.fqs.queue.application.response.FindRankResponse;
@@ -38,10 +39,10 @@ public class QueueController {
             return Mono.error(() -> new BusinessException(QueueErrorCode.INVALID_SERVER_REQUEST));
         }
 
-        Mono<ResponseEntity<ResponseBody<String>>> result = queueService.lineUp()
-                .map(response -> ResponseEntity.ok(createSuccessResponse(response)));
+        return queueService.lineUp()
+                .map(ResponseUtil::createSuccessResponse)
+                .map(ResponseEntity::ok);
 
-        return result;
     }
 
     @PostMapping("/consume")

@@ -18,7 +18,7 @@ public final class EventProducerService implements ProducerService {
     @Override
     public void send(String topic, QueueCommand message) {
 
-        producer.send(topic, message).doOnError(e -> {
+        producer.send(topic, topic, message).doOnError(e -> {
             if (!Objects.isNull(e)) {
                 log.error("이벤트 생성 에러 발생 :: {}", e.getMessage());
             }
