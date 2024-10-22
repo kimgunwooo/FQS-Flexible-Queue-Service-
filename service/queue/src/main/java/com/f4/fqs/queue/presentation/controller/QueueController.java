@@ -29,13 +29,13 @@ public class QueueController {
     private final QueueService queueService;
 
     @PostMapping("/add")
-    public Mono<ResponseEntity<ResponseBody<String>>> createQueue(@PathVariable String serviceName) {
+    public Mono<ResponseEntity<ResponseBody<String>>> createUserIdAndAddOnQueue(@PathVariable String serviceName) {
 
         if(!Objects.equals(serverName, serviceName)) {
             return Mono.error(() -> new BusinessException(QueueErrorCode.INVALID_SERVER_REQUEST));
         }
 
-        return queueService.lineUp()
+        return queueService.createUserIdAndAddOnQueue()
                 .map(ResponseUtil::createSuccessResponse)
                 .map(ResponseEntity::ok);
 
@@ -56,7 +56,7 @@ public class QueueController {
     }
 
     @GetMapping("/ranks")
-    public Mono<ResponseEntity<ResponseBody<Long>>> getCurrentOrder(
+    public Mono<ResponseEntity<ResponseBody<Long>>> getRank(
             @PathVariable String serviceName,
             @RequestParam String identifier) {
 

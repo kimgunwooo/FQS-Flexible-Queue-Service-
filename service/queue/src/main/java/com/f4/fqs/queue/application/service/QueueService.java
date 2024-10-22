@@ -13,7 +13,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ public class QueueService {
     private String SERVICE_NAME;
 
 
-    public Mono<String> lineUp() {
+    public Mono<String> createUserIdAndAddOnQueue() {
 
         UUID userId = UUID.randomUUID();
 
