@@ -40,6 +40,7 @@ public class QueueService {
     private final DockerService dockerService;
     private final PortManager portManager;
     private final RestTemplate restTemplate;
+    private final KafkaService kafkaService;
 
     private static final String HTTP_METHOD_ALL = "ALL";
 
@@ -61,6 +62,8 @@ public class QueueService {
         this.saveQueueInfoToRedis(secretKey, savedQueue);
         this.addApiRoute(savedQueue);
         this.runDockerService(savedQueue.getName(), springPort, redisPort);
+
+        kafkaService.startQueueCommand(request.name());
 
         return new CreateQueueResponse(savedQueue.getId(), savedQueue.getSecretKey());
     }
@@ -129,6 +132,7 @@ public class QueueService {
         portManager.releaseRedisPort(queue.getRedisPort());
         redisRouteTemplate.delete(ROUTE_KEY_PREFIX + queue.getId());
         this.refreshRoutes();
+        kafkaService.startQueueCommand(queue.getName());
         return new CloseQueueResponse(queue.getId(), queue.getExpirationTime());
     }
 
