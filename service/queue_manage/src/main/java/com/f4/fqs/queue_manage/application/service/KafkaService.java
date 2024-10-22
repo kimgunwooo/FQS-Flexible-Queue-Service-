@@ -20,4 +20,12 @@ public class KafkaService {
         executor.createEvent(QueueCommand.addQueueCommand("test-service", UUID.randomUUID(), LocalDateTime.now()));
     }
 
+    public void startQueueCommand(String queueName) {
+        executor.createEvent(QueueCommand.startQueueCommand(queueName, null, LocalDateTime.now()));
+    }
+
+    public void endQueueCommand(String queueName) {
+        executor.createEvent(QueueCommand.endQueueCommand(queueName, null, LocalDateTime.now()));
+    }
+
 }
