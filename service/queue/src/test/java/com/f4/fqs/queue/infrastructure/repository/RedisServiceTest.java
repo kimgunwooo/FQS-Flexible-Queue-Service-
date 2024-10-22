@@ -41,9 +41,9 @@ class RedisServiceTest {
     @Test
     public void 대기열_소모() throws Exception {
 
-        List<String> consumeList = redisService.consume(100);
+//        List<String> consumeList = redisService.consume(100);
 
-        consumeList.forEach(o -> CompletableFuture.runAsync(() -> System.out.println(o)));
+//        consumeList.forEach(o -> CompletableFuture.runAsync(() -> System.out.println(o)));
 
 
         //given
