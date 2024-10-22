@@ -44,7 +44,8 @@ public class SecurityConfig {
             "/auth/login/root", //로그인
             "/auth/login/iam", //로그인
             "/routes/refresh-routes", //route 갱신
-            "/api/queue/validate"// 큐 유효성 검사 API endpoint 추가
+            "/api/queue/validate",// 큐 유효성 검사 API endpoint 추가
+            "/actuator/health"
     );
 
     private final List<String> SECRETKEY_PATH_LIST = List.of(
