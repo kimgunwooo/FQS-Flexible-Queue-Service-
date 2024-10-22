@@ -50,6 +50,4 @@ management:
     web:
       exposure:
         include: health, shutdown, prometheus
-  endpoint:
-    health:
-      show-details: always
+
