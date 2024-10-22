@@ -39,7 +39,7 @@ public class SecurityConfig {
 
     private final RedisService redisService;
 
-    private final List<String> JWT_WHITE_LIST = List.of(
+    private final List<String> WHITE_LIST = List.of(
             "/auth/signup", //회원가입
             "/auth/login/root", //로그인
             "/auth/login/iam", //로그인
@@ -67,7 +67,7 @@ public class SecurityConfig {
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
 
-            if(JWT_WHITE_LIST.stream().anyMatch(i -> i.equals(path))) {
+            if(WHITE_LIST.stream().anyMatch(i -> i.equals(path))) {
                 log.info("jwt white list call by path: {}", path);
                 return chain.filter(exchange);
             }
@@ -127,7 +127,7 @@ public class SecurityConfig {
                     // 사용자 정보를 새로운 헤더에 추가
                     ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                             .header("X-User-Id", String.valueOf(userId))
-//                            .header("X-User-SecretKey", String.valueOf(secretKey))
+                            .header("X-User-SecretKey", String.valueOf(secretKey)) // exchange에 secretKey 추가
                             .header("X-User-Roles", role)
                             .build();
 
