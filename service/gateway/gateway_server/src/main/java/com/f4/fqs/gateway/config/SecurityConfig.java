@@ -39,11 +39,12 @@ public class SecurityConfig {
 
     private final RedisService redisService;
 
-    private final List<String> JWT_WHITE_LIST = List.of(
+    private final List<String> WHITE_LIST = List.of(
             "/auth/signup", //회원가입
             "/auth/login/root", //로그인
             "/auth/login/iam", //로그인
-            "/routes/refresh-routes" //route 갱신
+            "/routes/refresh-routes", //route 갱신
+            "/api/queue/validate"// 큐 유효성 검사 API endpoint 추가
     );
 
     private final List<String> SECRETKEY_PATH_LIST = List.of(
@@ -67,7 +68,7 @@ public class SecurityConfig {
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
 
-            if(JWT_WHITE_LIST.stream().anyMatch(i -> i.equals(path))) {
+            if(WHITE_LIST.stream().anyMatch(i -> i.equals(path))) {
                 log.info("jwt white list call by path: {}", path);
                 return chain.filter(exchange);
             }
@@ -87,7 +88,16 @@ public class SecurityConfig {
                     redisService.hasKey(secretKeyHeader)
             ) {
                 log.info("Secret key is provided, skipping JWT validation");
-                return chain.filter(exchange);  // JWT 검증을 건너뜀
+
+                // exchange에 secretKey 추가
+                ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                        .header("X-SecretKey", String.valueOf(secretKey)) // secretKey 추가
+                        .build();
+
+                // 수정된 요청으로 필터 체인 계속 처리
+                ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
+
+                return chain.filter(modifiedExchange);  // JWT 검증을 건너뜀
             }
             else if (!Objects.isEmpty(authHeader) && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
@@ -127,7 +137,7 @@ public class SecurityConfig {
                     // 사용자 정보를 새로운 헤더에 추가
                     ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                             .header("X-User-Id", String.valueOf(userId))
-//                            .header("X-User-SecretKey", String.valueOf(secretKey))
+ //                           .header("X-SecretKey", String.valueOf(secretKey)) // exchange에 secretKey 추가
                             .header("X-User-Roles", role)
                             .build();
 

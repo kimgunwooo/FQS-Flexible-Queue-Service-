@@ -13,6 +13,11 @@ dependencies {
     implementation project(':common:kafka')
     implementation project(':service:gateway:gateway_domain')
 
+    implementation 'com.github.loki4j:loki-logback-appender:1.5.1' // Loki
+
+    // prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
