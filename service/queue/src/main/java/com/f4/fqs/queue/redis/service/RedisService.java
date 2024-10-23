@@ -6,12 +6,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Range;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.f4.fqs.commons.domain.util.CommonConstraints.QUEUE_NAME;
 
@@ -26,30 +29,18 @@ public class RedisService {
 
     public Mono<Boolean> lineUp(UUID userId) {
 
-        LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now();
 
         return reactiveRedisTemplate.opsForZSet()
                 .add(QUEUE_NAME, userId.toString(), now.toEpochSecond(ZoneOffset.UTC) + (now.getNano() / 1000000000.0));
 
     }
 
-    public Mono<List<String>> consume(int size) {
+    public Flux<String> consume(int size) {
 
-        Range<Long> range = Range.from(Range.Bound.inclusive(0L))
-                .to(Range.Bound.inclusive((long) size - 1));
-
-        return Objects.requireNonNull(
-                    reactiveRedisTemplate.opsForZSet().range(
-                            QUEUE_NAME,
-                            range
-                    )
-               )
-               .collectList()
-               .flatMap(resultA ->
-                    reactiveRedisTemplate.opsForZSet()
-                            .removeRange(QUEUE_NAME, range)
-                            .then(Mono.just(resultA))
-                );
+        return reactiveRedisTemplate.opsForZSet()
+                .popMin(QUEUE_NAME, size)
+                .mapNotNull(ZSetOperations.TypedTuple::getValue);
 
     }
 

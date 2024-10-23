@@ -37,22 +37,14 @@ public class QueueService {
 
     }
 
-    public Mono<List<String>> consume(int size) {
+    public Flux<String> consume(int size) {
 
-        if(size <= 0) {
-            return Mono.error(new BusinessException(QueueErrorCode.CONSUME_SIZE_MUST_BE_OVER_ZERO));
-        }
+
 
         return redisService.consume(size)
-                .flatMap(list ->
-                    Flux.fromIterable(list)
-                        .flatMap(userId ->
-                            executor.createEvent(
-                                QueueCommand.consumeQueueCommand(SERVICE_NAME, UUID.fromString(userId), LocalDateTime.now())
-                            )
-                            .then(Mono.just(userId))
-                        ).collectList()
-                );
+                .delayUntil(userId -> executor.createEvent(
+                    QueueCommand.consumeQueueCommand(SERVICE_NAME, UUID.fromString(userId), LocalDateTime.now())
+                ));
     }
 
 

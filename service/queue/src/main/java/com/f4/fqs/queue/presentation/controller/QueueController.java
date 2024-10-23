@@ -49,10 +49,15 @@ public class QueueController {
         if(!Objects.equals(serverName, serviceName)) {
             return Mono.error(() -> new BusinessException(QueueErrorCode.INVALID_SERVER_REQUEST));
         }
-        Mono<ResponseEntity<ResponseBody<List<String>>>> result = queueService.consume(size)
-                .map(response -> ResponseEntity.ok(createSuccessResponse(response)));
 
-        return result;
+        if(size <= 0) {
+            return Mono.error(new BusinessException(QueueErrorCode.CONSUME_SIZE_MUST_BE_OVER_ZERO));
+        }
+
+        return  queueService.consume(size)
+                        .collectList()
+                        .map(response -> ResponseEntity.ok(createSuccessResponse(response)));
+
     }
 
     @GetMapping("/ranks")
