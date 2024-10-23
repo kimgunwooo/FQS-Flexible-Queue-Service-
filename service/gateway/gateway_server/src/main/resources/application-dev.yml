@@ -21,10 +21,10 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/api/user/**
-        - id: temporary-queue
-          uri: lb://temporary-queue
+        - id: event-store
+          uri: lb://event-store
           predicates:
-            - Path=/temporary-queue/queue/**
+            - Path=/store/**
         - id: queue-manage-service
           uri: lb://queue-manage-service
           predicates:
