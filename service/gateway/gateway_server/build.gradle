@@ -67,11 +67,11 @@ jib {
 		ports = ['19091']
 		jvmFlags = [
 				"-server",
-				"-Xmx512M",
+//				"-Xmx512M",
 				"-Dspring.profiles.active=dev",
 				"-XX:+UseContainerSupport",
 				"-XX:InitialRAMPercentage=60.0",
-				"-XX:MaxRAMPercentage=60.0",
+				"-XX:MaxRAMPercentage=80.0",
 				"-XX:+UseZGC",
 				"-XX:+DisableExplicitGC",
 				"-XX:MetaspaceSize=256M",
