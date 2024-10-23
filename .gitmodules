@@ -1,0 +1,3 @@
+[submodule "FQS-sdk"]
+	path = FQS-sdk
+	url = https://github.com/kimgunwooo/FQS-sdk.git
