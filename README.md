@@ -7,7 +7,7 @@
 - It offers a convenient queue service to backend developers in the form of a library.
 
 ## 👍 Merit
-![our service range.png](our%20service%20range.png)
+![our service range.png](docs/images/our%20service%20range.png)
 - It takes on the load required for queue management.
 - It provides a library for easy usage.
 - Using root privileges and subordinate privilege accounts allows for more detailed management.
