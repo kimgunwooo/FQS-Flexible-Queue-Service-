@@ -1,0 +1,34 @@
+server:
+  port: 19098
+
+spring:
+  application:
+    name: event-store
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    open-in-view: false
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:19090/eureka/

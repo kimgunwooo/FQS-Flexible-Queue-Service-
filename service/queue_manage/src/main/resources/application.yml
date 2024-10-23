@@ -1,0 +1,49 @@
+server:
+  port: 19095
+
+spring:
+  application:
+    name: queue-manage-service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/queue
+    username: root
+    password: password
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        hbm2ddl.auto: update
+        default_batch_fetch_size: 100
+    open-in-view: false
+    show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, loggers, mappings, metrics, shutdown, prometheus
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+
+docker:
+  image-name: kwforu/queue
+
+gateway:
+  refresh-url: http://localhost:19091/routes/refresh-routes

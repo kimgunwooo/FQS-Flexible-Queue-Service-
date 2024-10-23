@@ -1,1 +1,20 @@
+plugins {
+    id("de.fayard.refreshVersions") version "0.40.2"
+}
+
 rootProject.name = 'fqs'
+
+include 'service:eureka'
+include 'service:gateway:gateway_domain'
+include 'service:gateway:gateway_server'
+include 'service:auth'
+include 'service:user'
+include 'service:queue'
+include 'service:queue_manage'
+include 'service:payment'
+include 'service:event_store'
+
+include 'common:domain'
+include 'common:kafka'
+include 'common:reactive_kafka'
+include 'common:kafka_common'

@@ -1,0 +1,81 @@
+plugins {
+    id 'application'
+    id 'com.google.cloud.tools.jib' version '3.4.0'
+}
+
+ext {
+    set('springCloudVersion', "2023.0.3")
+}
+
+dependencies {
+
+    implementation 'com.github.loki4j:loki-logback-appender:1.5.1' // Loki
+
+    // prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation project(":common:domain")
+    implementation project(":common:kafka")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+jib {
+    from {
+        image = "amazoncorretto:17"
+        platforms {
+            platform {
+                architecture = 'amd64'
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = "kwforu/" + "${project.name}".toLowerCase() + ":${project.version}"
+        tags = ['latest']
+    }
+    container {
+        ports = ['19093']
+        jvmFlags = [
+                "-server",
+                "-Xmx512M",
+                "-Dspring.profiles.active=dev",
+                "-XX:+UseContainerSupport",
+                "-XX:InitialRAMPercentage=60.0",
+                "-XX:MaxRAMPercentage=60.0",
+                "-XX:+UseZGC",
+                "-XX:+DisableExplicitGC",
+                "-XX:MetaspaceSize=256M",
+                "-XX:MaxMetaspaceSize=256M",
+                "-Duser.timezone=UTC",
+                "-Djava.net.preferIPv4Stack=true",
+                "-Djava.net.preferIPv6Addresses=false",
+                "-Dnetworkaddress.cache.ttl=0",
+                "-Dnetworkaddress.cache.negative.ttl=0",
+        ]
+        environment = [
+                MYSQL_HOST: System.getenv("MYSQL_HOST"),
+                MYSQL_PORT: System.getenv("MYSQL_PORT"),
+                MYSQL_USER: System.getenv("MYSQL_USER"),
+                MYSQL_PASSWORD: System.getenv("MYSQL_PASSWORD"),
+                JWT_SECRET_KEY: System.getenv("JWT_SECRET_KEY"),
+        ]
+    }
+}

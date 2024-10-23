@@ -1,0 +1,47 @@
+server:
+  port: 19098
+
+spring:
+  application:
+    name: event-store
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    open-in-view: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    streams:
+      properties:
+        default.key.serde: org.apache.kafka.common.serialization.Serdes
+        default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
+        spring.json.trusted.packages: "*"
+        default.deserialization.exception.handler: com.f4.fqs.eventStore.kafka.exception.CustomDeserializationExceptionHandler
+        auto_offset_reset_config: none
+        auto.create.topics.enable: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, loggers, mappings, metrics, shutdown, prometheus
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+
+logging:
+  level:
+    org.springframework.r2dbc.core: debug

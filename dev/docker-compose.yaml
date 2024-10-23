@@ -1,0 +1,152 @@
+version: '3.8'
+
+networks:
+  ec2-user_fqs_network:
+    external: true
+
+services:
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
+    networks:
+      - ec2-user_fqs_network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 1
+    networks:
+      - ec2-user_fqs_network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,EXTERNAL://kafka:9092,DOCKER://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - ec2-user_fqs_network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 7999:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_READONLY: "false"
+    depends_on:
+      - kafka
+    networks:
+      - ec2-user_fqs_network
+
+  eureka:
+    image: kwforu/eureka:latest
+    ports:
+      - "19090:19090"
+    depends_on:
+      - kafka
+      - redis
+      - loki
+    networks:
+      - ec2-user_fqs_network
+
+  gateway:
+    image: kwforu/gateway_server:latest
+    ports:
+      - "19091:19091"
+    depends_on:
+      - eureka
+      - loki
+    networks:
+      - ec2-user_fqs_network
+
+  auth:
+    image: kwforu/auth:latest
+    ports:
+      - "19092:19092"
+    depends_on:
+      - eureka
+      - loki
+    networks:
+      - ec2-user_fqs_network
+
+  user:
+    image: kwforu/user:latest
+    ports:
+      - "19093:19093"
+    depends_on:
+      - eureka
+      - loki
+    networks:
+      - ec2-user_fqs_network
+
+  queue_manage:
+    image: kwforu/queue_manage:latest
+    ports:
+      - "19095:19095"
+    depends_on:
+      - eureka
+      - loki
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./entrypoint.sh:/entrypoint.sh
+    networks:
+      - ec2-user_fqs_network
+
+  event_store:
+    image: kwforu/event_store:latest
+    ports:
+      - "19098:19098"
+    depends_on:
+      - eureka
+      - loki
+    networks:
+      - ec2-user_fqs_network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
+    networks:
+      - ec2-user_fqs_network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+      - ec2-user_fqs_network
+
+  loki:
+    image: grafana/loki:3.0.0
+    volumes:
+      - ./loki:/mnt/config
+    ports:
+      - "3100:3100"
+    command: -config.file=/mnt/config/loki-config.yml
+    restart: always
+    networks:
+      - ec2-user_fqs_network
+

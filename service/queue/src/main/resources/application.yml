@@ -1,0 +1,46 @@
+server:
+  port: 19096
+
+spring:
+  application:
+    name: ${SERVICE_NAME}
+#  r2dbc:
+#    url: r2dbc:mysql://localhost:3306/queue
+#    username: root
+#    password: password
+#    pool.enabled: true
+#    pool.initial-size: 10
+#    pool.max-size: 50
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      username: default
+      password: systempass
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    open-in-view: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, loggers, mappings, metrics, shutdown, prometheus
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+
+logging:
+  level:
+    org.springframework.r2dbc.core: debug

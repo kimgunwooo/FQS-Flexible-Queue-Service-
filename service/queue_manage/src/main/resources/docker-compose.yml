@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  spring-service:
+    image: kwforu/queue_server:latest
+    container_name: spring_service
+    ports:
+      - "8080:8080"
+  redis:
+    image: redis:latest
+    container_name: redis_service
+    ports:
+      - "6380:6379"
