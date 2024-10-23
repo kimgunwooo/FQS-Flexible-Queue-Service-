@@ -43,6 +43,10 @@ public class KafkaStreamsConfig {
     private final EventSourcingExecutor executor;
     private Set<String> topics = new HashSet<>();
 
+    @Bean
+    public Topology topology(StreamsBuilder streamsBuilder) {
+        return streamsBuilder.build();
+    }
 
     @Bean
     public KStream<String, QueueCommand> queueCommandKStream(StreamsBuilder streamsBuilder) {
@@ -69,7 +73,7 @@ public class KafkaStreamsConfig {
                     kafkaAdmin.createOrModifyTopics(new NewTopic(v.serviceName(), 1, (short) 1));
                     topics.add(v.serviceName());
                 }
-                executor.divideEvent(v.serviceName(), v);
+                executor.divideEvent(v.serviceName(), v).subscribe();
             }
         );
 

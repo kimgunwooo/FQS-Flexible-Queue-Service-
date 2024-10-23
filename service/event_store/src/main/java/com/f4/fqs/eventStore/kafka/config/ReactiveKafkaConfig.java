@@ -36,7 +36,7 @@ public class ReactiveKafkaConfig {
 
         Map<String, Object> consumerOptionsMap = new HashMap<> (
                 Map.of(
-                    ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString(),
+                    ConsumerConfig.GROUP_ID_CONFIG, CommonConstraints.EVENT,
                     ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                     ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, CustomJsonDeserializer.class,
                     ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, Boolean.FALSE,

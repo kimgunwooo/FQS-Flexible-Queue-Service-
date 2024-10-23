@@ -51,12 +51,14 @@ public class EventHandler {
                             && rec.value().createdAt().isAfter(from) && rec.value().createdAt().isBefore(to)
                             && offsetManager.offset >= rec.offset() + 1
                     )
+                    .filter(i -> i.value().serviceName().equals(serviceName))
                     .map(ConsumerRecord::value)
                     .collectList()
                     .map(i -> {
                         EventType status = EventType.START_QUEUE;
                         Set<UUID> set = new LinkedHashSet<>();
                         for (QueueCommand user : i) {
+                            log.info("user :: {}", user);
                             switch (user.eventType()) {
                                 case ADD_QUEUE -> set.add(user.userId());
                                 case CONSUME_QUEUE -> set.remove(user.userId());
@@ -80,3 +82,31 @@ public class EventHandler {
     }
 
 }
+
+/**
+ * 4minute-2021
+ * aws ssm start-session --target i-076b9e926eb4b8549
+ * c0a96d87-211f-4f6a-8857-98f253ba4078
+ * 16f40c65-a437-43d6-8523-dd50da42fba5
+ *
+ *
+ *
+ *
+ * 4mimute-2024
+ * 96ac37c6-976e-4051-9c1a-42e7eb11a14b
+ * 72c17282-a497-4901-9f92-6fbacb006523
+ * 4083fc17-02eb-4433-b1fd-3b7def52ba01
+ * 9fe822a2-0a41-45e4-8eb0-3e2df1bae3ed
+ * 8f042daa-1513-431c-b5dc-08e9d4ddf9f7
+ *
+ *
+ * 4minute-2022
+ * "7762a206-eb24-4d54-845a-82c50c88d9e6",
+ * "96ac37c6-976e-4051-9c1a-42e7eb11a14b",
+ * "72c17282-a497-4901-9f92-6fbacb006523",
+ * "4083fc17-02eb-4433-b1fd-3b7def52ba01",
+ * "9fe822a2-0a41-45e4-8eb0-3e2df1bae3ed",
+ * "8f042daa-1513-431c-b5dc-08e9d4ddf9f7"
+ *
+ *
+ */

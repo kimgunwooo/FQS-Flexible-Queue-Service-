@@ -3,12 +3,8 @@ package com.f4.fqs.queue.presentation.controller;
 import com.f4.fqs.commons.domain.exception.BusinessException;
 import com.f4.fqs.commons.domain.response.ResponseBody;
 import com.f4.fqs.commons.domain.response.ResponseUtil;
-import com.f4.fqs.queue.application.response.AddQueueResponse;
-import com.f4.fqs.queue.application.response.ConsumeQueueResponse;
-import com.f4.fqs.queue.application.response.FindRankResponse;
 import com.f4.fqs.queue.application.service.QueueService;
 import com.f4.fqs.queue.presentation.exception.QueueErrorCode;
-import com.f4.fqs.queue.presentation.request.FindRankRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,13 +29,13 @@ public class QueueController {
     private final QueueService queueService;
 
     @PostMapping("/add")
-    public Mono<ResponseEntity<ResponseBody<String>>> createQueue(@PathVariable String serviceName) {
+    public Mono<ResponseEntity<ResponseBody<String>>> createUserIdAndAddOnQueue(@PathVariable String serviceName) {
 
         if(!Objects.equals(serverName, serviceName)) {
             return Mono.error(() -> new BusinessException(QueueErrorCode.INVALID_SERVER_REQUEST));
         }
 
-        return queueService.lineUp()
+        return queueService.createUserIdAndAddOnQueue()
                 .map(ResponseUtil::createSuccessResponse)
                 .map(ResponseEntity::ok);
 
@@ -60,7 +56,7 @@ public class QueueController {
     }
 
     @GetMapping("/ranks")
-    public Mono<ResponseEntity<ResponseBody<Long>>> getCurrentOrder(
+    public Mono<ResponseEntity<ResponseBody<Long>>> getRank(
             @PathVariable String serviceName,
             @RequestParam String identifier) {
 
